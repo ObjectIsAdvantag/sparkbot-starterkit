@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/ObjectIsAdvantag/spark-bot-skeleton#readme",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "express": "^4.13.4"
   }
 }
