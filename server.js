@@ -5,14 +5,14 @@
 //     launch the CiscoSpark Web client, go to a Room, look for the integrations on the right panel, create a new integration
 
 var express = require('express');
+var app = express();
+
+var https = require("https");
+var sparkToken = process.env.SPARK_TOKEN;
+
 var port = process.env.PORT || 8080;
 var webhookURI = "/webhook";
 var integrationURI = "/integration";
-var app = express();
-
-//var Sparky = require('sparky');
-//var sparkToken = process.env.SPARK_TOKEN;
-//var sparky = new Sparky({ token: sparkToken });
 
 // health endpoint
 app.get('/', function (req, res) {
@@ -30,9 +30,30 @@ app.route(webhookURI)
 		res.status(400).json({ message: 'This REST webhook is expecting an HTTP POST' });
 	})
 	.post(function(req, res) {
-		var newMessage = req.body.data;
-		console.log('received message from' + newMessage.personEmail);
-		//processMessage(newMessage)
+
+		// retreive message contents from spark
+		var newMessageEvent = req.body.data;
+		var options = {
+		  "method": "GET",
+		  "hostname": "api.ciscospark.com",
+		  "path": "/v1/messages/" + newMessageEvent.id,
+		  "headers": { "authorization": "Bearer " + sparkToken }
+		};
+		var req = https.request(options, function (response) {
+		  var chunks = [];
+		  response.on("data", function (chunk) {
+		    chunks.push(chunk);
+		  });
+		  response.on("end", function () {
+		    var message = JSON.parse(Buffer.concat(chunks));
+
+				// WEBHOOK message processing
+				processMessage(message);
+		  });
+		});
+		req.end();
+
+		// event processed, let's respond to spark
 		res.status(200).json({ 'message': 'message processed by webhook' });
 	});
 
@@ -43,8 +64,12 @@ app.route(integrationURI)
 	})
 	.post(function(req, res) {
 		var newMessage = req.body;
-		console.log('received message from' + newMessage.personEmail);
-		//processMessage(newMessage)
+		console.log('integration received message from ' + newMessage.personEmail);
+		console.log(newMessage.toString());
+
+	  // Integration message processing
+		processMessage(newMessage);
+
 		res.status(200).json({ 'message': 'message processed by integration' });
 	});
 
@@ -55,10 +80,8 @@ app.listen(port, function () {
 });
 
 
-function processMessage(data, res) {
-    console.log("received message : " + JSON.stringify(req.body));
+function processMessage(message) {
+    console.log("received message : " + message.text + ", from " + message.personEmail);
 
-    // TODO check the request is well formed
-
-    res.status(200);
+    // Is it a command
 }
