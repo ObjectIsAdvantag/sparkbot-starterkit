@@ -47,7 +47,7 @@ app.route(webhookURI)
 		  response.on("end", function () {
 		    var message = JSON.parse(Buffer.concat(chunks));
 
-				// WEBHOOK message processing
+				// WEBHOOK processing
 				processMessage(message);
 		  });
 		});
@@ -64,13 +64,11 @@ app.route(integrationURI)
 	})
 	.post(function(req, res) {
 		var newMessage = req.body;
-		console.log('integration received message from ' + newMessage.personEmail);
-		console.log(newMessage.toString());
-
-	  // Integration message processing
-		processMessage(newMessage);
 
 		res.status(200).json({ 'message': 'message processed by integration' });
+
+	  // INTEGRATION processing
+		processMessage(newMessage);
 	});
 
 
@@ -81,7 +79,9 @@ app.listen(port, function () {
 
 
 function processMessage(message) {
-    console.log("received message : " + message.text + ", from " + message.personEmail);
+    console.log("received message: '" + message.text + "', from: " + message.personEmail);
 
-    // Is it a command
+    //
+    // ADD YOUR MESSAGE PROCESSING HERE
+		//
 }

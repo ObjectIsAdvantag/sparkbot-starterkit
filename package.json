@@ -12,7 +12,6 @@
   },
   "keywords": [
     "ciscospark",
-    "spark",
     "bot",
     "express"
   ],
@@ -24,8 +23,6 @@
   "homepage": "https://github.com/ObjectIsAdvantag/spark-bot-skeleton#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "ciscospark": "^0.6.3",
-    "express": "^4.13.4",
-    "sparky": "^0.1.1"
+    "express": "^4.13.4"
   }
 }
