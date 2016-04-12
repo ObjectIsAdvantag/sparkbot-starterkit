@@ -1,6 +1,8 @@
 # CiscoSpark NodeJS Starter Kit
 
-StarterKit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express)
+A minimal Starter Kit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express).
+
+Started after Paris DevNet SmartCity and TADHack hackathons, to bootstrap teams in minutes.
 
 Quick setup :
 - run the sparkbot
@@ -8,7 +10,7 @@ Quick setup :
 - attach your sparkbot to a Room
 - [optional] see troubleshooting to visualize traffic to your webhook and diagnose any issue
 
-# how to run your sparkbot
+# How to run your sparkbot
 
 ``` bash
 // download the spark bot nodejs code  
@@ -19,14 +21,31 @@ Quick setup :
 // launch your spark bot, default to port 8080
 // note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
 > SPARK_TOKEN=XXXXXXXXXXXX node server.js
+Cisco Spark bot started, running on port 8080
+
+// open a second console, check your bot is running by hitting its health resource:
+// GET https://sparkbot.localtunnel.me/
+{ "message": "Your Cisco Spark bot is running", "webhook": "/webhook", "integration": "/integration", "localport": 8080 }
 
 // if you're running your bot on a private network,
 // install localtunnel
 > npm install -g localtunnel
 
-// launch a tunnel to local port 8080
+// launch a tunnel to localhost:8080
 > lt -s sparkbot -p 8080
-// your bot is now exposed at https://sparkbot.localtunnel.me/
+your url is: https://sparkbot.localtunnel.me
+
+// check everything is running ok by hitting its health resource
+// open in a web browser https://sparkbot.localtunnel.me/
+// or via [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/ObjectIsAdvantag/smartproxy)
+> bat https://sparkbot.localtunnel.me/
+HTTP/1.1 200 OK
+{
+  "message": "Your Cisco Spark bot is running",
+  "webhook": "/webhook",
+  "integration": "/integration",
+  "localport": 8080
+}
 ```
 
 # How to attach your bot to a Spark room
@@ -67,7 +86,7 @@ For debugging purpose, you may want to run a WebAPI Traffic inspector.
 
 We suggest Fiddler on Windows.
 
-If you wanna try an experimental #golang traffic capture tool, try smartproxy.
+If you wanna try an experimental #golang traffic capture tool, try [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy).
 Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run it
 
 
