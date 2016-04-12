@@ -1,4 +1,4 @@
-# spark-bot-skeleton
+# CiscoSpark NodeJS Starter Kit
 
 StarterKit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express)
 
