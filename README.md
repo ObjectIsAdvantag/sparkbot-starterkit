@@ -1,19 +1,21 @@
 # CiscoSpark NodeJS Starter Kit
 
-A minimal Starter Kit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express).
+A minimal Starter Kit to create your own [CiscoSpark](https://ciscospark.com/) bot, with minimal dependencies (NodeJS, Express).
 
 Started after Paris DevNet SmartCity and TADHack hackathons, to bootstrap teams in minutes.
 
+New to Cisco Spark ? start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, encrypted end to end, with integrated video).
+
 Quick setup :
 - run the sparkbot
-- [optional] if running on a local machine, run localtunnel to make your bot accessible from the internet,
+- [optional] if local, run localtunnel to make your bot accessible from the internet,
 - attach your sparkbot to a Room
-- [optional] see troubleshooting to visualize traffic to your webhook and diagnose any issue
+- [optional] troubleshoot by visualizing realtime traffic to your webhook
 
 # How to run your sparkbot
 
 ``` bash
-// download the spark bot nodejs code  
+// download the spark bot source code  
 > git clone https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit
 > cd sparkbot-nodejs-starterkit
 > npm install
@@ -82,12 +84,13 @@ Quick setup:
 
 # troubleshooting
 
-For debugging purpose, you may want to run a WebAPI Traffic inspector.
+For debugging purpose, you may want to use a WebAPI Traffic inspector.
 
-We suggest Fiddler on Windows.
+httsp://sparkbot.localtunnel.me <-internet-> http://localhost:9090 <-lan-> :8080
 
-If you wanna try an experimental #golang traffic capture tool, try [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy).
-Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run it
+If you 're looking for options, Windows users generally use [Fiddler](https://www.telerik.com/download/fiddler).
+
+Linux and Mac users may give a try to [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy): an experimental #golang traffic capture tool. Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run through these basic steps.
 
 
 ``` bash
