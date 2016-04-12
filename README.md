@@ -2,7 +2,7 @@
 
 StarterKit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express)
 
-Express setup :
+Quick setup :
 - install localtunnel in order to make visible your bot on the internet,
 - run the sparkbot
 - attach it to a Room
@@ -29,30 +29,41 @@ Express setup :
 
 # attach to a Spark Room
 
-## webhook
+CiscoSpark defines 2 types of webhooks:
 
-launch Postman, lists your rooms, choose one, pick its id,
+- HTTP webhooks : receive all events fired by a Spark Room, 'NewMessage' is the only event fired as of April 2016 (more coming),
+- outgoing integrations : receive new message events fired by a Spark Room.
 
-then add your webhook via the REST API,
+The bot proposed by the SarterKit proposes 2 endpoints /webhook and /integration so that you can pick one or another way to attach it to a Spark Room.
 
-make sure you pick your bot /webook URI, ex : https://sparkbot.localtunnel.me/webhook
 
-see [Spark documentation](https://developer.ciscospark.com/endpoint-webhooks-post.html) and/or [DevNet Learning lab]
+## via HTTP webhooks
 
-## Outgoing integration
+Attaching an HTTP webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
 
-launch the CiscoSpark Web client, pick a room, add an integration
+Quick setup:
+- [lists your rooms](https://developer.ciscospark.com/endpoint-rooms-get.html), choose one, pick its room id,
+- [add a webhook](https://developer.ciscospark.com/endpoint-webhooks-post.html) with a filter for the roomId above, and with a targetUrl pointing to your /webook endpoint, ex: https://sparkbot.localtunnel.me/webhook.
 
-Ex : https://sparkbot.localtunnel.me/integration
+Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
 
+
+## via an outgoing integration
+
+An outgoing integration is created directly from the Cisco Spark web client.
+
+Quick setup:
+- launch the [Web client](https://web.ciscospark.com),
+- pick a Room, look for the integrations page on the right,
+- create a new integration of type "outgoing webhook" with a targetUrl pointing to your /integration endpoint, ex: https://sparkbot.localtunnel.me/integration.
 
 # troubleshooting
 
-For debugging purpose, you may also want to run a WebAPI Traffic inspector.
+For debugging purpose, you may want to run a WebAPI Traffic inspector.
 
 We suggest Fiddler on Windows.
 
-If you wanna try an experimental golang traffic capture, try smartproxy.
+If you wanna try an experimental #golang traffic capture tool, try smartproxy.
 Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run it
 
 ``` bash
