@@ -1,17 +1,14 @@
 # spark-bot-skeleton
 
-Skeleton to hack a CiscoSpark bot, with minimal dependencies: NodeJS, Express
+StarterKit to hack a CiscoSpark bot, with minimal dependencies (NodeJS, Express)
 
-Express set :
-- install localtunnel
+Express setup :
+- install localtunnel in order to make visible your bot on the internet,
 - run the sparkbot
-- attach to a Room
+- attach it to a Room
 - [optional] troubleshooting
 
 # how to run
-
-Install localtunnel on your dev machine in order to make visible on the internet,
-and start your bot.
 
 ``` bash
 // install localtunnel
@@ -26,8 +23,8 @@ and start your bot.
 > cd <repo>
 > npm install
 
-// time to launch your bot on port 8008
-> SPARK_TOKEN=XXXXXXXXXX node server.js
+// time to launch your bot on port 8080
+> SPARK_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXxXXXXX node server.js
 ```
 
 # attach to a Spark Room
