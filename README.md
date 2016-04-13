@@ -1,16 +1,17 @@
 # CiscoSpark NodeJS Starter Kit
 
-A minimal Starter Kit to create your own [CiscoSpark](https://ciscospark.com/) bot, with minimal dependencies (NodeJS, Express).
-
-Started after Paris DevNet SmartCity and TADHack hackathons, to bootstrap teams in minutes.
-
-New to Cisco Spark ? start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, encrypted end to end, with integrated video).
+A minimal NodeJS Starter Kit to create your own [CiscoSpark](https://ciscospark.com/) bot, with few dependencies (Express that's it) and goal to keep it as at a minimum. Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
 
 Quick setup :
 - run the sparkbot
 - [optional] if local, run localtunnel to make your bot accessible from the internet,
 - attach your sparkbot to a Room
 - [optional] troubleshoot by visualizing realtime traffic to your webhook
+
+Looking forward to build an advanced Spark Bot with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint)  and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
+
+New to Cisco Spark ? start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, encrypted end to end, with integrated video).
+
 
 # How to run your sparkbot
 
@@ -60,7 +61,7 @@ CiscoSpark defines 2 types of webhooks:
 The bot proposed by the StarterKit proposes 2 endpoints /webhook and /integration so that you can pick one or another way to attach the bot to a Spark Room.
 
 
-## via an HTTP webhook
+## attach via an HTTP webhook
 
 Attaching an HTTP webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
 
@@ -71,7 +72,7 @@ Quick setup:
 Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
 
 
-## via an outgoing integration
+## attach via an outgoing integration
 
 Outgoing integrations can be created directly from the Cisco Spark web client.
 Note: you may also use the REST API /webhooks/outgoing resource.
@@ -82,16 +83,23 @@ Quick setup:
 - create a new integration of type "outgoing webhook" with a targetUrl pointing to your bot /integration URI, ex: https://sparkbot.localtunnel.me/integration.
 
 
-# troubleshooting
+# Troubleshooting
 
 For debugging purpose, you may want to use a WebAPI Traffic inspector.
 
-httsp://sparkbot.localtunnel.me <-internet-> http://localhost:9090 <-lan-> :8080
-
 If you 're looking for options, Windows users generally use [Fiddler](https://www.telerik.com/download/fiddler).
 
-Linux and Mac users may give a try to [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy): an experimental #golang traffic capture tool. Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run through these basic steps.
+Linux and Mac users may give a try to [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy): an experimental #golang traffic capture tool.
 
+``` text
+https://sparkbot.localtunnel.me
+<-internet->
+http://localhost:9090
+<-lan->
+:8080
+```
+
+Simply [pick a binary](https://github.com/ObjectIsAdvantag/smartproxy/releases/tag/v0.4) for your platform, and run through these following steps.
 
 ``` bash
 // download a Windows exe or Mac / Linux binary, set as executable, launch
