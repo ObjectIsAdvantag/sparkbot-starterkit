@@ -17,13 +17,13 @@ Quick steps:
 
 Retreive your API token can be retreived by clicking on your picture, in the upper right of the [Web Portal documentation](https://developer.ciscospark.com/getting-started.html#).
 
-![](docs/img/SparkApiToken.png)
+![](img/SparkApiToken.png)
 
 Open a shell, clone the current github repository if you did not do it yet, then type the commands below.
 
 ```
 > cd examples
->  SPARK_TOKEN=ZGJkMjU0M2YtMWFhNi00Yjk1LWIwNWMtZjAxMTczMDljMDQyNzZlODQzNmYtZjBk    node basic-webhook.js
+> SPARK_TOKEN=ZGJkMjU0M2YtMWFhNi00Yjk1LWIwNWMtZjAxMTczMDljMDQyNzZlODQzNmYtZjBk  node basic-webhook.js
 Cisco Spark bot started
 REST webhook, running on port 8080
 ```
@@ -61,7 +61,7 @@ First, we'll pick the id of the Room you want to attach to. Go to the [List Room
 
 ![](img/ListRooms.png)
 
-Toogle Test mode to on. Run the request, navigate to a Room from the list displayed in the right pane. Copy page the id of the Room, here Y2lzY29zcGFyazovL3VzL1JPT00vMjQ4ZTQ3OTAtZWJjZi0xMWU1LTkyMjEtMTVmMTZiMmJlZjUx.
+Toogle Test mode to on. Run the request, navigate to a Room from the list displayed in the right pane. Copy the id of the Room, here Y2lzY29zcGFyazovL3VzL1JPT00vMjQ4ZTQ3OTAtZWJjZi0xMWU1LTkyMjEtMTVmMTZiMmJlZjUx.
 
 ![](img/PickRoomId.png)
 
