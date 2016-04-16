@@ -10,16 +10,16 @@ var config = {
   // bot spark api token, mandatory for webhooks
   token: process.env.SPARK_TOKEN,
 
-  //attach_as: "webhook",
-  //port: 8080,
-  //URI: "/sparkbot"
+  attach_as: "webhook",
+  port: 8080,
+  URI: "/webhook"
 };
 
 // init flint framework
 var bot = new SparkBot(config);
 
-// echo test
-//bot.process(function(message) {
-//  console.log("received text: " + message.text + ", from: " + message.personEmail)
-//});
+// register a basic echo function
+bot.register(function(message) {
+  console.log("New message from " + message.personEmail + ": " + message.text)
+});
 

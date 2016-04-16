@@ -42,8 +42,8 @@ function Webhook(config) {
 	}
 
 	if (!config) {
-		console.log('bot configuration error');
-		throw createError('configuration: no api token found');
+		console.log('No configuration, exiting...');
+		throw createError('bot configuration error');
 	}
 
 	// type is webhook by default
@@ -88,13 +88,13 @@ function Webhook(config) {
 				res.status(400).json({message: 'This REST webhook is expecting an HTTP POST'});
 			})
 			.post(function (req, res) {
-				console.log('REST webhook invoked ');
+				console.log('REST webhook invoked');
 
 				// retreive message contents from spark
-				if (!req.body.data) {
+				if (!req.body || !req.body.data) {
 					console.log('Unexpected payload, check webhook configuration')
 					res.status(400).json({message: 'Wrong payload, a data payload is expected for REST webhooks',
-										  details: 'either the bot is misconfigured (should be an outgoing integration ?), or Cisco Spark is running a new API version'});
+										  details: 'either the bot is misconfigured or Cisco Spark is running a new API version'});
 					return;
 				}
 
@@ -103,11 +103,11 @@ function Webhook(config) {
 					'method': 'GET',
 					'hostname': 'api.ciscospark.com',
 					'path': '/v1/messages/' + newMessageEvent.id,
-					'headers': {'authorization': 'Bearer ' + sparkToken}
+					'headers': {'authorization': 'Bearer ' + config.token}
 				};
-				console.log('Asking for decrypted message: ' + JSON.stringify(message));
+				console.log('Asking for decrypted message');
 				var req = https.request(options, function (response) {
-					console.log('Received decrypted message: ' + JSON.stringify(message));
+					console.log('Received decrypted message, decoding');
 					var chunks = [];
 					response.on('data', function (chunk) {
 						chunks.push(chunk);
