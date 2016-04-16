@@ -63,11 +63,11 @@ your url is: https://mysparkbot.localtunnel.me
 
 Launch the Cisco Spark Web client : https://web.ciscospark.com
 
-Go to the right pane, locate the Integrations section, ![](AddOutgoingIntegrationViaWebClient-Step0.png)
+Go to the right pane, locate the Integrations section, ![](AddOutgoingIntegration-ViaWebClient-Step0.png)
 
-Select Add integration, scroll down and click the Outgoing integration ![](AddOutgoingIntegrationViaWebClient-Step1.png)
+Select Add integration, scroll down and click the Outgoing integration ![](AddOutgoingIntegration-ViaWebClient-Step1.png)
 
-Go through the wizard, choose a room and specify your bot endpoint: https://mysparkbot.localtunnel.me, ![](AddOutgoingIntegrationViaWebClient-Step3.png)
+Go through the wizard, choose a room and specify your bot endpoint: https://mysparkbot.localtunnel.me, ![](AddOutgoingIntegration-ViaWebClient-Step3.png)
 
 
 ## Write a message in the room you attached you bot
