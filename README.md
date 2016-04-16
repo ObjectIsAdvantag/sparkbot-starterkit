@@ -1,6 +1,9 @@
-# CiscoSpark NodeJS Starter Kit
+# Yet Another Unofficial CiscoSpark NodeJS Bot StarterKit
 
 A minimal NodeJS Starter Kit to create your own [CiscoSpark](https://ciscospark.com/) bot, with few dependencies (Express that's it) and goal to keep it as at a minimum. Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
+
+New to Cisco Spark ?
+start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, with end to end securiy and integrated video).
 
 Quick setup :
 - run the sparkbot
@@ -8,9 +11,9 @@ Quick setup :
 - attach your sparkbot to a Room
 - [optional] troubleshoot by visualizing realtime traffic to your webhook
 
-Looking forward to build an advanced Spark Bot with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint)  and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
-
-New to Cisco Spark ? start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, encrypted end to end, with integrated video).
+Looking for :
+- a StarterKit with a modular approach, check the [as-a-module branch](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/tree/as-a-module), the [webhook](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-webhook.js) or [integration](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-integration.js) examples and the [step by step guides](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/docs/BasicWebhookSample.md).
+- an advanced Spark Bot Engine with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint)  and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
 # How to run your sparkbot
