@@ -1,6 +1,6 @@
 # Basic example of Outgoing integration
 
-illustrates how to setup a Cisco Spark bot, and attached it to a Room as an Outgoing [integration](https://developer.ciscospark.com/integrations.html).
+Illustrates how to setup a bot, and attach it to a Spark Room as an Outgoing [integration](https://developer.ciscospark.com/integrations.html).
 
 Quick steps:
 
