@@ -1,6 +1,10 @@
-// Simple bot that echoes to the console as new messages are posted
-
-var SparkBot = require('../sparkbot');
+/*
+ * Simple bot that echoes to the console as all new messages posted in a Cisco Spark Room
+ *
+ * Illustrates a REST Webhook
+ *
+ */
+var SparkBot = require("../sparkbot");
 
 var config = {
   // bot spark api token, mandatory for webhooks

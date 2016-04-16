@@ -1,18 +1,25 @@
-// Simple bot that echoes to the console as new messages are posted
-
-var SparkBot = require('../sparkbot');
+/*
+ * Simple bot that echoes to the console as all new messages posted in a Cisco Spark Room
+ *
+ * Illustrate an Outgoing integration
+ *
+ * Check the documentation to set up this example
+ *
+ */
+var SparkBot = require("../sparkbot");
 
 var config = {
-  attach_as: "integration",
+  attach_as: "integration"
   //port: 8080,
-  //URI: "/sparkbot"
+  //URI: "/integration"
 };
 
-// init flint framework
+// initialize and start bot
 var bot = new SparkBot(config);
 
-// echo test
-//bot.process(function(message) {
-//  console.log("received text: " + message.text + ", from: " + message.personEmail)
-//});
+// register a basic echo function
+bot.register(function(message) {
+  console.log("new message from " + message.personEmail + ": " + message.text)
+});
+
 

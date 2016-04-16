@@ -32,6 +32,14 @@ app.use(bodyParser.json());
  *  }
  */
 function Webhook(config) {
+	self = this;
+
+
+	function process(message) {
+		if (self.handler) {
+			self.handler(message);
+		}
+	}
 
 	if (!config) {
 		console.log('bot configuration error');
@@ -109,7 +117,7 @@ function Webhook(config) {
 
 						// WEBHOOK processing
 						console.log("Processing message: " + JSON.stringify(message));
-						//processMessage(message);
+						process(message);
 					});
 				});
 				req.end();
@@ -134,7 +142,7 @@ function Webhook(config) {
 
 				// INTEGRATION processing
 				console.log('Processing message: ' + JSON.stringify(message));
-				//processMessage(newMessage);
+				process(message);
 			});
 	}
 
@@ -148,6 +156,14 @@ function Webhook(config) {
 			console.log('Outgoing integration, running on port ' + port);
 		}
 	});
+}
+
+// Register function to process new messages
+// The function should have a function(message) signature
+Webhook.prototype.register = function(registered) {
+	this.handler = function(message) {
+		registered(message);
+	};
 }
 
 
