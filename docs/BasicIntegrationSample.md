@@ -63,19 +63,25 @@ your url is: https://mysparkbot.localtunnel.me
 
 Launch the Cisco Spark Web client : https://web.ciscospark.com
 
-Go to the right pane, locate the Integrations section, ![](AddOutgoingIntegration-ViaWebClient-Step0.png)
+Go to the right pane, locate the Integrations section, ![](img/AddOutgoingIntegration-ViaWebClient-Step0.png)
 
-Select Add integration, scroll down and click the Outgoing integration ![](AddOutgoingIntegration-ViaWebClient-Step1.png)
+Select Add integration, scroll down and click the Outgoing integration ![](img/AddOutgoingIntegration-ViaWebClient-Step1.png)
 
-Go through the wizard, choose a room and specify your bot endpoint: https://mysparkbot.localtunnel.me, ![](AddOutgoingIntegration-ViaWebClient-Step3.png)
+Go through the wizard, choose a room and specify your bot endpoint: https://mysparkbot.localtunnel.me, ![](img/AddOutgoingIntegration-ViaWebClient-Step3.png)
 
 
-## Write a message in the room you attached you bot
+## Test your bot
+
+Write a message in the room you attached your bot to,
+
+The bot should write to the console
+
 
 ```
+> node basic-integration.js
+Cisco Spark bot started
+Outgoing integration, running on port 8080
 Outgoing integration invoked
-
 Processing message: {"id":"Y2lzY29zcGFyazovL3VzL01FU1NBR0UvZWYyMTZkYjAtMDNiOC0xMWU2LWI4MTktNzcwNzhmYWRlZTU4","roomId":"Y2lzY29zcGFyazovL3VzL1JPT00vMjQ4ZTQ3OTAtZWJjZi0xMWU1LTkyMjEtMTVmMTZiMmJlZjUx","text":"Completed the basic outgoing integration sample","personId":"Y2lzY29zcGFyazovL3VzL1BFT1BMRS85MmIzZGQ5YS02NzVkLTRhNDEtOGM0MS0yYWJkZjg5ZjQ0ZjQ","personEmail":"stsfartz@cisco.com","created":"2016-04-16T09:52:30.219Z"}
-
 new message from stsfartz@cisco.com: Completed the basic outgoing integration sample
 ```
