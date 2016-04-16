@@ -1,14 +1,20 @@
+# Basic example of Outgoing integration
 
-This sample illustrates how to setup a Cisco spark bot with an Outgoing integration
+This sample illustrates how to setup a Cisco Spark bot, and attached it to a Room as an Outgoing integration
 
 Quick steps
+
 1. Run the example
+
 2. Expose your sparkbot to the internet
+
 3. Attach it to a spark room
+
 4. Write a message in the room you attached you bot
 
 
-# Run the example
+
+## Run the example
 
 Open a shell, clone the current github repository if you did not do it yet, then type:
 
@@ -42,7 +48,7 @@ curl -X POST -H "Content-Type: application/json" \
 ```
 
 
-# Expose your sparkbot to the internet
+## Expose your sparkbot to the internet
 
 You'll need a tunneling took such as ngrok, localtunnel
 
@@ -53,20 +59,18 @@ your url is: https://mysparkbot.localtunnel.me
 ```
 
 
-# Attach your sparkbot to a spark room
+## Attach your sparkbot to a spark room
 
 Launch the Cisco Spark Web client : https://web.ciscospark.com
 
-Go to the right pane, locate the Integrations section, ![](AddOutgoingIntegrationViaWebClient-Step0.png | width=400)
+Go to the right pane, locate the Integrations section, ![](AddOutgoingIntegrationViaWebClient-Step0.png)
 
-Select Add integration ![](AddOutgoingIntegrationViaWebClient-Step1.png | width=200)
+Select Add integration, scroll down and click the Outgoing integration ![](AddOutgoingIntegrationViaWebClient-Step1.png)
 
-Click the Outgoing integration ![](AddOutgoingIntegrationViaWebClient-Step2.png | width=200)
-
-Choose a room and specify your bot endpoint: khttps://mysparkbot.localtunnel.me, see ![](AddOutgoingIntegrationViaWebClient-Step3.png | width=200)
+Go through the wizard, choose a room and specify your bot endpoint: https://mysparkbot.localtunnel.me, ![](AddOutgoingIntegrationViaWebClient-Step3.png)
 
 
-# Write a message in the room you attached you bot
+## Write a message in the room you attached you bot
 
 ```
 Outgoing integration invoked
