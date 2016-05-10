@@ -1,26 +1,27 @@
 {
-  "name": "ciscospark-bot-skeleton",
-  "version": "0.1.0",
-  "description": "Code to startup a bot for CiscoSpark using NodeJS and Express",
-  "main": "server.js",
+  "name": "sparkbot",
+  "version": "v0.3",
+  "description": "Code to bootstrap a CiscoSpark bot using minimal requirements (NodeJS, Express)",
+  "main": "index.js",
   "scripts": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ObjectIsAdvantag/spark-bot-skeleton.git"
+    "url": "git+https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit.git"
   },
   "keywords": [
-    "ciscospark",
-    "bot",
-    "express"
+    "CiscoSpark",
+    "Bot",
+    "NodeJS",
+    "Express"
   ],
   "author": "Stève Sfartz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ObjectIsAdvantag/spark-bot-skeleton/issues"
+    "url": "https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/issues"
   },
-  "homepage": "https://github.com/ObjectIsAdvantag/spark-bot-skeleton#readme",
+  "homepage": "https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4"
