@@ -19,9 +19,11 @@ Looking for :
 # Pick a sparkbot example and run it
 
 Go to the examples directory and pick an nodejs example. 
+We suggest you start with the "basic-webhook.js". 
+
+Hereafter we show you the code, you do not need to modify it for now.
 You'll create your custom sparkbot later, by copy pasting an example and extend the code.
 
-We suggest you start with the "basic-webhook.js" for now : 
 
 ``` nodejs
 var SparkBot = require("../sparkbot");
@@ -47,7 +49,9 @@ bot.register(function(message) {
 });
 ```
 
-Now it's time to run your sparkbot and explose it to the Web. 
+
+Well, time to run your sparkbot and expose it to the Web. 
+Let's do that !
 
 ``` bash
 // download the spark bot source code  
