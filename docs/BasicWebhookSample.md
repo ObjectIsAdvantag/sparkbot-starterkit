@@ -54,7 +54,9 @@ your url is: https://mysparkbot.localtunnel.me
 
 ## Attach your bot to a spark room
 
-You can either use the [WebHook intertactive documentation](https://developer.ciscospark.com/resource-webhooks.html), or leverage your favorite REST client (curl, Postman...).
+You can either use the [Spark interactive documentation](https://developer.ciscospark.com/resource-webhooks.html), 
+or leverage your favorite REST client (curl, Postman...).
+
 This guide leverages the interactive documentation.
 
 First, we'll pick the id of the Room you want to attach to. Go to the [List Rooms page](https://developer.ciscospark.com/endpoint-rooms-get.html).

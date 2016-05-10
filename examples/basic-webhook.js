@@ -1,5 +1,5 @@
 /*
- * Simple bot that echoes to the console as all new messages posted in a Cisco Spark Room
+ * Simple bot that echoes new Cisco Spark messages to the console
  *
  * Illustrates a REST Webhook
  *
@@ -7,7 +7,7 @@
 var SparkBot = require("../sparkbot");
 
 var config = {
-  // bot spark api token, mandatory for webhooks
+  /// Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
   token: process.env.SPARK_TOKEN,
 
   attach_as: "webhook",
@@ -15,11 +15,14 @@ var config = {
   URI: "/webhook"
 };
 
-// init flint framework
+// Starts your Webhook
 var bot = new SparkBot(config);
 
-// register a basic echo function
+// This function will be called every time a new message is posted into Spark
 bot.register(function(message) {
+  //
+  // ADD YOUR CUSTOM CODE HERE
+  //
   console.log("New message from " + message.personEmail + ": " + message.text)
 });
 

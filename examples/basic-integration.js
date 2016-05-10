@@ -1,9 +1,7 @@
 /*
- * Simple bot that echoes to the console as all new messages posted in a Cisco Spark Room
+ * Simple bot that echoes new Cisco Spark messages to the console
  *
- * Illustrate a REST Webhook
- *
- * Check the documentation to set up this example
+ * Illustrates an Outgoing integration
  *
  */
 var SparkBot = require("../sparkbot");
@@ -14,11 +12,14 @@ var config = {
   URI: "/integration"
 };
 
-// initialize and start bot
+// Starts your integration
 var bot = new SparkBot(config);
 
-// register a basic echo function
+// This function will be called every time a new message is posted into Spark
 bot.register(function(message) {
+  //
+  // ADD YOUR CUSTOM CODE HERE
+  //
   console.log("New message from " + message.personEmail + ": " + message.text)
 });
 

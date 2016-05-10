@@ -1,22 +1,53 @@
-# Yet Another Unofficial CiscoSpark NodeJS Bot StarterKit
+# Yet Another Unofficial StarterKit to create Cisco Spark bots in NodeJS
 
-A minimal NodeJS Starter Kit to create your own [CiscoSpark](https://ciscospark.com/) bot, with few dependencies (Express that's it) and goal to keep it as at a minimum. Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
+A minimal NodeJS Starter Kit to create your own [Spark](https://ciscospark.com/) bot, with few dependencies and goal to keep them at a minimum (Express that's it). 
+Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
 
 New to Cisco Spark ?
 start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, with end to end securiy and integrated video).
 
 Quick setup :
-- run the sparkbot
-- [optional] if local, run localtunnel to make your bot accessible from the internet,
-- attach your sparkbot to a Room
-- [optional] troubleshoot by visualizing realtime traffic to your webhook
+- pick an example, run it locally and expose it to the world,
+- attach your sparkbot to a Room and enter a message,
+- if necessary, troubleshoot by visualizing realtime traffic 
 
 Looking for :
 - a StarterKit with a modular approach, check the [as-a-module branch](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/tree/as-a-module), the [webhook](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-webhook.js) or [integration](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-integration.js) examples and the [step by step guides](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/docs/BasicWebhookSample.md).
 - an advanced Spark Bot Engine with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint)  and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
-# How to run your sparkbot
+# Pick a sparkbot example and run it
+
+Go to the examples directory and pick an nodejs example. 
+You'll create your custom sparkbot later, by copy pasting an example and extend the code.
+
+We suggest you start with the "basic-webhook.js" for now : 
+
+``` nodejs
+var SparkBot = require("../sparkbot");
+
+var config = {
+  // Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
+  token: process.env.SPARK_TOKEN,
+
+  attach_as: "webhook",
+  port: 8080,
+  URI: "/webhook"
+};
+
+// Starts your Webhook
+var bot = new SparkBot(config);
+
+// This function will be called every time a new message is posted into Spark 
+bot.register(function(message) {
+  //
+  // ADD YOUR CUSTOM CODE HERE
+  //
+  console.log("New message from " + message.personEmail + ": " + message.text)
+});
+```
+
+Now it's time to run your sparkbot and explose it to the Web. 
 
 ``` bash
 // download the spark bot source code  
@@ -24,33 +55,42 @@ Looking for :
 > cd sparkbot-nodejs-starterkit
 > npm install
 
+// pick an example 
+> cd examples
+
 // launch your spark bot, default to port 8080
 // note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
-> SPARK_TOKEN=XXXXXXXXXXXX node server.js
+> SPARK_TOKEN=XXXXXXXXXXXX node basic-webhook.js
 Cisco Spark bot started, running on port 8080
 
-// open a second console, check your bot is running by hitting its health resource:
-// GET https://sparkbot.localtunnel.me/
-{ "message": "Your Cisco Spark bot is running", "webhook": "/webhook", "integration": "/integration", "localport": 8080 }
+// open a second console and check your bot is running by hitting your sparkbot health resource:
+// open in a web browser http://localhost:8080/ping/ 
+// or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+> curl http://localhost:8080/ping/
+{"message":"Congrats, your bot is up and running","isWebhook":true,"isIntegration":false,"URI":"http://localhost:8080/webhook"}
 
-// if you're running your bot on a private network,
-// install localtunnel
+// if you're running your bot on a private network, install localtunnel
 > npm install -g localtunnel
 
-// launch a tunnel to localhost:8080
+// launch a tunnel and expose your http://localhost:8080
 > lt -s sparkbot -p 8080
 your url is: https://sparkbot.localtunnel.me
 
-// check everything is running ok by hitting its health resource
-// open in a web browser https://sparkbot.localtunnel.me/
-// or via [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/ObjectIsAdvantag/smartproxy)
-> bat https://sparkbot.localtunnel.me/
+// check everything is running ok by hitting your sparkbot health resource
+// open in a web browser https://sparkbot.localtunnel.me/ping/ 
+// or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+> curl -v -X GET https://sparkbot.localtunnel.me/ping
+* ...
+* NPN, negotiated HTTP1.1
+* ...
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* ...
 HTTP/1.1 200 OK
 {
-  "message": "Your Cisco Spark bot is running",
-  "webhook": "/webhook",
-  "integration": "/integration",
-  "localport": 8080
+    "message":"Congrats, your bot is up and running",
+    "isWebhook":true,
+    "isIntegration":false,
+    "URI":"http://localhost:8080/webhook"
 }
 ```
 
@@ -64,9 +104,9 @@ CiscoSpark defines 2 types of webhooks:
 The bot proposed by the StarterKit proposes 2 endpoints /webhook and /integration so that you can pick one or another way to attach the bot to a Spark Room.
 
 
-## attach via an HTTP webhook
+## attach via a REST Webhook
 
-Attaching an HTTP webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
+Attaching a REST webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
 
 Quick setup:
 - [lists your rooms](https://developer.ciscospark.com/endpoint-rooms-get.html), choose one, pick its room id,
@@ -75,7 +115,7 @@ Quick setup:
 Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
 
 
-## attach via an outgoing integration
+## attach via an Outgoing integration
 
 Outgoing integrations can be created directly from the Cisco Spark web client.
 Note: you may also use the REST API /webhooks/outgoing resource.
@@ -90,7 +130,7 @@ Quick setup:
 
 For debugging purpose, you may want to use a WebAPI Traffic inspector.
 
-If you 're looking for options, Windows users generally use [Fiddler](https://www.telerik.com/download/fiddler).
+If you're looking for options, Windows users generally use [Fiddler](https://www.telerik.com/download/fiddler).
 
 Linux and Mac users may give a try to [smartproxy](https://github.com/ObjectIsAdvantag/smartproxy): an experimental #golang traffic capture tool.
 
