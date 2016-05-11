@@ -158,8 +158,23 @@ function Webhook(config) {
 	});
 }
 
-// Register function to process new messages
+// Register the specified function to process new messages
 // The function should have a function(message) signature
+// Message is an object instantiated from json payloads such as :
+//
+//   {
+//   	"id" : "46ef3f0a-e810-460c-ad37-c161adb48195",
+//   	"personId" : "49465565-f6db-432f-ab41-34b15f544a36",
+//   	"personEmail" : "matt@example.com",
+//   	"roomId" : "24aaa2aa-3dcc-11e5-a152-fe34819cdc9a",
+//   	"text" : "PROJECT UPDATE - A new project project plan has been published on Box",
+//   	"files" : [ "http://www.example.com/images/media.png" ],
+//   	"toPersonId" : "Y2lzY29zcGFyazovL3VzL1BFT1BMRS9mMDZkNzFhNS0wODMzLTRmYTUtYTcyYS1jYzg5YjI1ZWVlMmX",
+//   	"toPersonEmail" : "julie@example.com",
+//   	"created" : "2015-10-18T14:26:16+00:00"
+//   }
+//
+// Check https://developer.ciscospark.com/endpoint-messages-messageId-get.html for more information
 Webhook.prototype.register = function(registered) {
 	this.handler = function(message) {
 		registered(message);
