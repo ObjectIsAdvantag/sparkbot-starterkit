@@ -72,13 +72,16 @@ Cisco Spark bot started, running on port 8080
 // open in a web browser http://localhost:8080/ping/ 
 // or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
 > curl http://localhost:8080/ping/
-// In OSX if localhost doesn't work you might try to use 127.0.0.1 as a replacement
+// OSX note: if localhost doesn't work for you, try 127.0.0.1
 {"message":"Congrats, your bot is up and running","isWebhook":true,"isIntegration":false,"URI":"http://localhost:8080/webhook"}
 
 // if you're running your bot on a private network, install localtunnel
 > npm install -g localtunnel
 
-// launch a tunnel and expose your http://localhost:8080
+// launch a tunnel and expose your http://localhost:8080 endpoint
+// note1: go for your bot nameso that you make sure you do not collide with another bot developer !
+// note2: once you'll have your bot successfully setup, you'll may want to run localtunnel forever:
+//     ex: while true; do lt -s sparkbot -p 8080; done
 > lt -s sparkbot -p 8080
 your url is: https://sparkbot.localtunnel.me
 
