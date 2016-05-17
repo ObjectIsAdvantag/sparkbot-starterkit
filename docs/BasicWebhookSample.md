@@ -47,7 +47,7 @@ You'll need a tunneling took such as [localtunnel](http://localtunnel.me) or [ng
 
 ```
 > npm install -g localtunnel
-> lt -s mysparkbot -p 8080
+> while true; do lt -s mysparkbot -p 8080; done
 your url is: https://mysparkbot.localtunnel.me
 ```
 
