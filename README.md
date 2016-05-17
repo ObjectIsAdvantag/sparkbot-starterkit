@@ -57,6 +57,9 @@ Let's do that !
 > cd sparkbot-starterkit
 > npm install
 
+// if you are in OSX you have to run
+> sudo npm install
+
 // pick an example 
 > cd examples
 
@@ -69,6 +72,7 @@ Cisco Spark bot started, running on port 8080
 // open in a web browser http://localhost:8080/ping/ 
 // or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
 > curl http://localhost:8080/ping/
+// In OSX if localhost doesn't work you might try to use 127.0.0.1 as a replacement
 {"message":"Congrats, your bot is up and running","isWebhook":true,"isIntegration":false,"URI":"http://localhost:8080/webhook"}
 
 // if you're running your bot on a private network, install localtunnel
@@ -112,7 +116,7 @@ Attaching a REST webhook to a Spark room is explained in the [Cisco Spark develo
 
 Quick setup:
 - [lists your rooms](https://developer.ciscospark.com/endpoint-rooms-get.html), choose one, pick its room id,
-- [add a webhook](https://developer.ciscospark.com/endpoint-webhooks-post.html) with a filter for the roomId above, and with a targetUrl pointing to your /webook endpoint, ex: https://sparkbot.localtunnel.me/webhook.
+- [add a webhook](https://developer.ciscospark.com/endpoint-webhooks-post.html) with a filter for the roomId above, and with a targetUrl pointing to your /webhook endpoint, ex: https://sparkbot.localtunnel.me/webhook.
 
 Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
 
