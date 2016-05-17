@@ -4,7 +4,7 @@
  * Illustrates an Outgoing integration
  *
  */
-var SparkBot = require("../sparkbot");
+var SparkBot = require("../sparkbot-starterkit");
 
 var config = {
   attach_as: "integration",

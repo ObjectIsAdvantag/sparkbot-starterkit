@@ -6,7 +6,7 @@
  * INSTALLATION NOTES : the node-sparky is required, to install it run :
  *   > npm install node-sparky
  */
-var SparkBot = require("../sparkbot");
+var SparkBot = require("../sparkbot-starterkit");
 var Sparky = require("node-sparky");
 
 var config = {

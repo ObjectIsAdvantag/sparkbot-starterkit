@@ -1,0 +1,12 @@
+
+# node artefacts 
+# automatically removed by npm
+#node_modules/
+#npm-debug.log
+
+# IDE
+.idea/
+
+# Non core library directories
+examples/
+docs/

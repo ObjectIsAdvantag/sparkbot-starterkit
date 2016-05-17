@@ -1,1 +1,1 @@
-module.exports = require('./sparkbot');
+module.exports = require('./sparkbot-starterkit');

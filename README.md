@@ -8,12 +8,10 @@ start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free
 
 Quick setup :
 - pick an example, run it locally and expose it to the world,
-- attach your sparkbot to a Room and enter a message,
-- if necessary, troubleshoot by visualizing realtime traffic 
+- attach your sparkbot to a Room and start interacting,
 
 Looking for :
-- a StarterKit with a modular approach, check the [as-a-module branch](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/tree/as-a-module), the [webhook](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-webhook.js) or [integration](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/examples/basic-integration.js) examples and the [step by step guides](https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/blob/as-a-module/docs/BasicWebhookSample.md).
-- an advanced Spark Bot Engine with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint)  and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
+- an advanced Spark Bot Engine with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
 # Pick a sparkbot example and run it
@@ -26,7 +24,7 @@ You'll create your custom sparkbot later, by copy pasting an example and extend 
 
 
 ``` nodejs
-var SparkBot = require("../sparkbot");
+var SparkBot = require("sparkbot-starterkit");
 
 var config = {
   // Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
@@ -55,8 +53,8 @@ Let's do that !
 
 ``` bash
 // download the spark bot source code  
-> git clone https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit
-> cd sparkbot-nodejs-starterkit
+> git clone https://github.com/ObjectIsAdvantag/sparkbot-starterkit
+> cd sparkbot-starterkit
 > npm install
 
 // pick an example 
