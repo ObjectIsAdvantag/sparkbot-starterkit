@@ -7,35 +7,74 @@ New to Cisco Spark ?
 start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat, with end to end securiy and integrated video).
 
 Quick setup :
-- pick an example, run it locally and expose it to the world,
+- pick an example, run it locally and expose it to the world via localtunnel or ngrok (see below for details),
 - attach your sparkbot to a Room and start interacting,
+
+Note that the StarterKit implements both Cisco Spark webhooks mecanisms: REST webhook and incoming integrations (see below for details). 
+Moreover, the StarterKit allows to implement both simultaneously for ultimate flexbility.
 
 Looking for :
 - an advanced Spark Bot Engine with self Room registration, check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
-# Pick a sparkbot example and run it
+# Start an incoming integration Bot
 
-Go to the examples directory and pick an nodejs example. 
-We suggest you start with the "basic-webhook.js". 
+Create the myfirstbot.js file below or pick an example from directory.
 
-Hereafter we show you the code, you do not need to modify it for now.
-You'll create your custom sparkbot later, by copy pasting an example and extend the code.
+``` nodejs
+var SparkBot = require("sparkbot-starterkit");
 
+// Starts a Webhook as an incoming integration, listening at :8080/integration
+var bot = new SparkBot();
+
+// This function will be called every time a new message is posted into Spark 
+bot.register(function(message) {
+  //
+  // ADD YOUR CUSTOM CODE HERE
+  //
+  console.log("New message from " + message.personEmail + ": " + message.text)
+});
+```
+
+You're all set, let's run your sparkbot 
+
+``` bash
+# if you are running OSX 
+> sudo npm install express sparkbot-starterkit
+# if you are running Windows
+> npm install express sparkbot-starterkit
+
+# launch your spark bot, default to port 8080
+# note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
+> node myfirstbot.js
+No configuration => starting up as an incoming integration...
+Cisco Spark bot started on port: 8080
+
+# open a second console and check your bot is running by hitting your sparkbot health resource:
+# open in a web browser http://localhost:8080/ping/ 
+# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+# OSX note: if localhost doesn't work for you, try 127.0.0.1
+> curl http://localhost:8080/ping/
+
+{"message":"Congrats, your bot is up and running","since":"2016-07-06T23:20:50.296Z","integrationURI":"/integration","webhookURI":null}
+
+```
+
+
+# Start a REST webhook Bot
+
+Create the myfirstbot.js file below or pick an example from directory.
 
 ``` nodejs
 var SparkBot = require("sparkbot-starterkit");
 
 var config = {
-  // Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
+  /// Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
   token: process.env.SPARK_TOKEN,
-
-  attach_as: "webhook",
-  port: 8080,
-  URI: "/webhook"
+  webhookURI: "/webhook"
 };
 
-// Starts your Webhook
+// Starts a Webhook as an incoming integration, listening at :8080/integration
 var bot = new SparkBot(config);
 
 // This function will be called every time a new message is posted into Spark 
@@ -47,47 +86,45 @@ bot.register(function(message) {
 });
 ```
 
-
-Well, time to run your sparkbot and expose it to the Web. 
-Let's do that !
+You're all set, let's run your sparkbot 
 
 ``` bash
-// download the spark bot source code  
-> git clone https://github.com/ObjectIsAdvantag/sparkbot-starterkit
-> cd sparkbot-starterkit
-> npm install
+# if you are running OSX 
+> sudo npm install express sparkbot-starterkit
+# if you are running Windows
+> npm install express sparkbot-starterkit
 
-// if you are in OSX you have to run
-> sudo npm install
+# launch your spark bot, default to port 8080
+# note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
+> SPARK_TOKEN=XXXXXXXXXXXXX  node myfirstbot.js
+Cisco Spark bot started on port: 8080
 
-// pick an example 
-> cd examples
-
-// launch your spark bot, default to port 8080
-// note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
-> SPARK_TOKEN=XXXXXXXXXXXX node basic-webhook.js
-Cisco Spark bot started, running on port 8080
-
-// open a second console and check your bot is running by hitting your sparkbot health resource:
-// open in a web browser http://localhost:8080/ping/ 
-// or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+# open a second console and check your bot is running by hitting your sparkbot health resource:
+# open in a web browser http://localhost:8080/ping/ 
+# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+# OSX note: if localhost doesn't work for you, try 127.0.0.1
 > curl http://localhost:8080/ping/
-// OSX note: if localhost doesn't work for you, try 127.0.0.1
-{"message":"Congrats, your bot is up and running","isWebhook":true,"isIntegration":false,"URI":"http://localhost:8080/webhook"}
+{"message":"Congrats, your bot is up and running","since":"2016-07-06T23:33:15.535Z","integrationURI":null,"webhookURI":"/webhook"}
 
-// if you're running your bot on a private network, install localtunnel
+```
+
+
+# How to expose your bot to the Web
+
+``` bash
+# if you're running your bot on a private network, install localtunnel
 > npm install -g localtunnel
 
-// launch a tunnel and expose your http://localhost:8080 endpoint
-// note1: go for your bot nameso that you make sure you do not collide with another bot developer !
-// note2: once you'll have your bot successfully setup, you'll may want to run localtunnel forever:
-//     ex: while true; do lt -s sparkbot -p 8080; done
+# launch a tunnel and expose your http://localhost:8080 endpoint
+# note1: maje sure top choose a name that will not collide with another bot developer !
+# note2: once you'll have your bot successfully setup, you'll may want to run localtunnel forever:
+#     ex: while true; do lt -s sparkbot -p 8080; done
 > lt -s sparkbot -p 8080
 your url is: https://sparkbot.localtunnel.me
 
-// check everything is running ok by hitting your sparkbot health resource
-// open in a web browser https://sparkbot.localtunnel.me/ping/ 
-// or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+# check everything is running ok by hitting your sparkbot health resource
+# open in a web browser https://sparkbot.localtunnel.me/ping/ 
+# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
 > curl -v -X GET https://sparkbot.localtunnel.me/ping
 * ...
 * NPN, negotiated HTTP1.1
@@ -113,7 +150,7 @@ CiscoSpark defines 2 types of webhooks:
 The bot proposed by the StarterKit proposes 2 endpoints /webhook and /integration so that you can pick one or another way to attach the bot to a Spark Room.
 
 
-## attach via a REST Webhook
+## to attach a REST Webhook to a Spark Room:
 
 Attaching a REST webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
 
@@ -124,7 +161,7 @@ Quick setup:
 Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
 
 
-## attach via an Outgoing integration
+## to attach an Outgoing integration to a Spark Room:
 
 Outgoing integrations can be created directly from the Cisco Spark web client.
 Note: you may also use the REST API /webhooks/outgoing resource.

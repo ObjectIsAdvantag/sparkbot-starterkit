@@ -7,7 +7,7 @@
 var SparkBot = require("../sparkbot-starterkit");
 
 var config = {
-  integration: "/integration"
+  integrationURI: "/integration"
 };
 
 // Starts your integration

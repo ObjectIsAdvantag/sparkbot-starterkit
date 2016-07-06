@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 /* Starts a Cisco Spark webhook with specified configuration
  *
  *  { 
- * 		port:      		8080,						// local dev env port, optional, defaults to 8080 	                   	
+ * 		port:      		8080,						// local dev env port, optional, defaults to process.env.PORT, or 8080 	                   	
  * 		webhookURI: 	"/webhook" 					// implements a REST Webhook behavior if present
  *  	integrationURI: "/integration"   		    // implements an Outgoing integration behavior if present
  *  	healthURI : 	"/ping",  					// health URI, optional, defaults to "/ping"

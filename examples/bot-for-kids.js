@@ -11,7 +11,7 @@ var SparkBot = require("../sparkbot-starterkit");
 var Sparky = require("node-sparky");
 
 var config = {
-  integration: "/newmessages",
+  integrationURI: "/newmessages",
 
   // Required for the bot to push messages back to the Spark room
   token: process.env.SPARK_TOKEN,
