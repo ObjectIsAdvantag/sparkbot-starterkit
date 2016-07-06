@@ -14,75 +14,49 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 
-/* Starts a Cisco Spark with configuration specified
+/* Starts a Cisco Spark webhook with specified configuration
  *
- * REST Webhook configuration
- *  {  attach-as: "webhook",                  // bot type, optional, defaults to "webhook"
- *     token:     "ERTCSGJTYJDSQFSDFDSFsd",   // Cisco Spark api token, mandatory for REST webhook
- *     port:      8080,                       // local dev env port, optional, defaults to 8080
- *     URI:       "/",                        // bot endpoint receiving messages, optional, defaults to "/"
- *     health:    "/ping"                     // health URI, optional, defaults to "/ping"
+ *  { 
+ * 		port:      		8080,						// local dev env port, optional, defaults to 8080 	                   	
+ * 		webhookURI: 	"/webhook" 					// implements a REST Webhook behavior if present
+ *  	integrationURI: "/integration"   		    // implements an Outgoing integration behavior if present
+ *  	healthURI : 	"/ping",  					// health URI, optional, defaults to "/ping"
+ * 		spark_token:  	"ERTCSGJTYJDSQFSDFDSFsd",   // mandatory for REST webhook to decrypt incoming message
  *  }
- *
- * Outgoing integration configuration
- *  {  attach-as: "integration",              // outgoing integration, mandatory as it defaults to "webhook" if not specified
- *     port:      8080,                       // local dev env port, optional, defaults to 8080
- *     URI:       "/",                        // bot endpoint receiving messages, optional, defaults to "/"
- *     health:    "/ping"                     // health URI, optional, defaults to "/ping"
- *  }
+ * 
  */
 function Webhook(config) {
 	self = this;
 
+	self.started = Date.now();
 
-	function process(message) {
+	function execute(message) {
 		if (self.handler) {
 			self.handler(message);
 		}
 	}
 
 	if (!config) {
-		console.log('No configuration, exiting...');
-		throw createError('bot configuration error');
+		config = { integrationURI: "/integration" };
+		console.log('No configuration => starting up as an incoming integration...');
+		//console.log('No configuration, exiting...');
+		//throw createError('bot configuration error');
 	}
-
-	// type is webhook by default
-	var isWebhook = true;
-	if (config.attach_as && config.attach_as === "integration") {
-		isWebhook = false;
-	}
-	else {
-
-		// token is mandatory for REST webhook
-		if (!config.token) {
-			console.log('Cisco Spark api token is not specified');
-			throw createError('configuration: no api token found');
-		}
-	}
-
-	// bot endpoint (ie, REST resource URI path)
-	var URI = '/';
-	if (config.URI) {
-		URI = config.URI;
-	}
-
-	// port defaults to 8080
-	var port = config.port || 8080;
 
 	// health endpoint
-	var health = '/ping';
+	var health = config.healthURI || '/ping';
 	app.get(health, function (req, res) {
 		res.json({
 			'message': 'Congrats, your bot is up and running',
-			'isWebhook': isWebhook,
-			'isIntegration': !isWebhook,
-			'URI': 'http://localhost:'+port+URI
+			'since': new Date(self.started).toISOString(),
+			'integrationURI': config.integrationURI || null,
+			'webhookURI': config.webhookURI || null		
 		});
 	});
 
 	// REST webhook handler
-	if (isWebhook) {
-		app.route(URI)
+	if (config.webhookURI) {
+		app.route(config.webhookURI)
 			.get(function (req, res) {
 				console.log('GET received instead of a POST')
 				res.status(400).json({message: 'This REST webhook is expecting an HTTP POST'});
@@ -103,7 +77,7 @@ function Webhook(config) {
 					'method': 'GET',
 					'hostname': 'api.ciscospark.com',
 					'path': '/v1/messages/' + newMessageEvent.id,
-					'headers': {'authorization': 'Bearer ' + config.token}
+					'headers': {'authorization': 'Bearer ' + config.spark_token}
 				};
 				console.log('Asking for decrypted message');
 				var req = https.request(options, function (response) {
@@ -117,7 +91,7 @@ function Webhook(config) {
 
 						// WEBHOOK processing
 						console.log("Processing message: " + JSON.stringify(message));
-						process(message);
+						execute(message);
 					});
 				});
 				req.end();
@@ -128,8 +102,8 @@ function Webhook(config) {
 	}
 
 	// Outgoing integration handler
-	else {
-		app.route(URI)
+	if (config.integrationURI) { 
+		app.route(config.integrationURI)
 			.get(function (req, res) {
 				console.log('GET received instead of a POST');
 				res.status(400).json({message: 'This outgoing integration is expecting an HTTP POST'});
@@ -142,21 +116,17 @@ function Webhook(config) {
 
 				// INTEGRATION processing
 				console.log('Processing message: ' + JSON.stringify(message));
-				process(message);
+				execute(message);
 			});
 	}
 
 	// Start bot
+	var port = config.port || process.env.PORT || 8080;
 	app.listen(port, function () {
-		console.log('Cisco Spark bot started');
-		if (isWebhook) {
-			console.log('REST webhook, running on port ' + port);
-		}
-		else {
-			console.log('Outgoing integration, running on port ' + port);
-		}
+		console.log('Cisco Spark bot started on port: ' + port);
 	});
 }
+
 
 // Register the specified function to process new messages
 // The function should have a function(message) signature
