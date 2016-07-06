@@ -1,6 +1,6 @@
 {
   "name": "sparkbot-starterkit",
-  "version": "v0.5.0",
+  "version": "v0.7.0",
   "description": "Code to bootstrap a CiscoSpark bot using minimal requirements (NodeJS, Express)",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit.git"
+    "url": "git+https://github.com/ObjectIsAdvantag/sparkbot-starterkit.git"
   },
   "keywords": [
     "CiscoSpark",
@@ -19,9 +19,9 @@
   "author": "Stève Sfartz",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit/issues"
+    "url": "https://github.com/ObjectIsAdvantag/sparkbot-starterkit/issues"
   },
-  "homepage": "https://github.com/ObjectIsAdvantag/sparkbot-nodejs-starterkit#readme",
+  "homepage": "https://github.com/ObjectIsAdvantag/sparkbot-starterkit#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4"
