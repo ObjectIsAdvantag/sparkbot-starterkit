@@ -9,10 +9,7 @@ var SparkBot = require("../sparkbot-starterkit");
 var config = {
   /// Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
   token: process.env.SPARK_TOKEN,
-
-  attach_as: "webhook",
-  port: 8080,
-  URI: "/webhook"
+  webhook: "/webhook"
 };
 
 // Starts your Webhook

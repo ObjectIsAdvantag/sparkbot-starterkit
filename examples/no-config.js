@@ -6,7 +6,7 @@
  */
 var SparkBot = require("../sparkbot-starterkit");
 
-// Starts your integration
+// No config => will start as an integration
 var bot = new SparkBot();
 
 // This function will be called every time a new message is posted into Spark

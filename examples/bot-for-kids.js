@@ -11,12 +11,10 @@ var SparkBot = require("../sparkbot-starterkit");
 var Sparky = require("node-sparky");
 
 var config = {
-  // Required for the bot to send messages
-  token: process.env.SPARK_TOKEN,
+  integration: "/newmessages",
 
-  attach_as: "integration",
-  port: 8080,
-  URI: "/newmessages",
+  // Required for the bot to push messages back to the Spark room
+  token: process.env.SPARK_TOKEN,
 
   name: "Daisy",
   peopleId: "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zNzYzZGNhMi1jZmQ1LTQ0ZTMtYWMwNy1iOTIzZTYxZDc2M2M"

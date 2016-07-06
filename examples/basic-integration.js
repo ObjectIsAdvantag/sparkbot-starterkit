@@ -7,9 +7,7 @@
 var SparkBot = require("../sparkbot-starterkit");
 
 var config = {
-  attach_as: "integration",
-  port: 8080,
-  URI: "/integration"
+  integration: "/integration"
 };
 
 // Starts your integration
