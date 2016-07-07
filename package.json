@@ -1,6 +1,6 @@
 {
   "name": "sparkbot-starterkit",
-  "version": "v0.7.0",
+  "version": "v0.7.1",
   "description": "Code to bootstrap a CiscoSpark bot using minimal requirements (NodeJS, Express)",
   "main": "index.js",
   "scripts": {

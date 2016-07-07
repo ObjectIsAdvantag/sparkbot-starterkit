@@ -21,7 +21,7 @@ app.use(bodyParser.json());
  * 		webhookURI: 	"/webhook" 					// implements a REST Webhook behavior if present
  *  	integrationURI: "/integration"   		    // implements an Outgoing integration behavior if present
  *  	healthURI : 	"/ping",  					// health URI, optional, defaults to "/ping"
- * 		spark_token:  	"ERTCSGJTYJDSQFSDFDSFsd",   // mandatory for REST webhook to decrypt incoming message
+ * 		token:  		"ERTCSGJTYJDSQFSDFDSFsd",   // Spark token, mandatory for REST webhook to decrypt incoming message
  *  }
  * 
  */
@@ -77,7 +77,7 @@ function Webhook(config) {
 					'method': 'GET',
 					'hostname': 'api.ciscospark.com',
 					'path': '/v1/messages/' + newMessageEvent.id,
-					'headers': {'authorization': 'Bearer ' + config.spark_token}
+					'headers': {'authorization': 'Bearer ' + config.token}
 				};
 				console.log('Asking for decrypted message');
 				var req = https.request(options, function (response) {
