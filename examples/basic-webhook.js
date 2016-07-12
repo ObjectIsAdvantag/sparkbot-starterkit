@@ -4,7 +4,7 @@
  * Illustrates a REST Webhook
  *
  */
-var SparkBot = require("../sparkbot-starterkit");
+var SparkBot = require("sparkbot-starterkit");
 
 var config = {
   /// Cisco Spark API token, note that it is mandatory for webhooks to decode new messages

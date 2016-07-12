@@ -36,21 +36,73 @@ function Webhook(config) {
 		}
 	}
 
-	if (!config) {
-		config = { integrationURI: "/integration" };
-		console.log('No configuration => starting up as an incoming integration...');
-		//console.log('No configuration, exiting...');
-		//throw createError('bot configuration error');
+	function triggerMessageCreatedEvent(orginalResponse, data) {
+		// Check the event is well formed
+		if (!data.id) {
+			console.log("cannot  message contents, assembling");
+			orginalResponse.status(500).json({'message': 'could not retreive the text of the new message with id:' + messageId});
+			return;
+		}
+		var messageId = data.id;
+
+		// Retreive text for message id
+		console.log("Requesting message contents");
+		var options = {
+						'method': 'GET',
+						'hostname': 'api.ciscospark.com',
+						'path': '/v1/messages/' + messageId,
+						'headers': {'authorization': 'Bearer ' + self.config.token}
+					};
+		var req = https.request(options, function (res) {
+			var chunks = [];
+			res.on("data", function (chunk) {
+				chunks.push(chunk);
+			});
+			res.on("end", function () {
+				if (res.statusCode != 200) {
+					console.log("Receiving message contents, assembling");
+					orginalResponse.status(500).json({'message': 'could not retreive the text of the new message with id:' + messageId});
+					return;
+				}
+
+				// Assemble and check retrieved message consistency
+				console.log("Received message contents, assembling");
+				var message = JSON.parse(Buffer.concat(chunks));
+				if (!message.text) {
+					console.log("No message contents were retreived, nothing to process, aborting...");
+					// let's consider this as a satisfying situation => 200 OK 
+					orginalResponse.status(200).json({'message': 'no content to process for new message with id:' + messageId});
+					return;
+				}
+
+				// event is ready to be processed, let's respond to Spark without waiting whatever the processing outcome will be
+				orginalResponse.status(200).json({'message': 'message is being processed by webhook'});
+
+				// processing happens now
+				//console.log("Now processing 'message/created' event");
+				console.log("Now processing 'message/created' event with contents: " + JSON.stringify(message)); // for debugging purpose only
+				execute(message);
+			});
+		});
+		req.end();
 	}
 
+	if (!config) {
+		// defaults the webhook to an incoming integration
+		config = { integrationURI: "/integration" };
+		console.log('No configuration => starting up as an incoming integration...');
+	}
+	self.config = config;
+
 	// health endpoint
-	var health = config.healthURI || '/ping';
+	var health = config.healthURI || "/ping";
 	app.get(health, function (req, res) {
 		res.json({
 			'message': 'Congrats, your bot is up and running',
 			'since': new Date(self.started).toISOString(),
 			'integrationURI': config.integrationURI || null,
-			'webhookURI': config.webhookURI || null		
+			'webhookURI': config.webhookURI || null,
+			'processable': '[messages/created]'		// should dynamically explore the registered handlers
 		});
 	});
 
@@ -58,46 +110,42 @@ function Webhook(config) {
 	if (config.webhookURI) {
 		app.route(config.webhookURI)
 			.get(function (req, res) {
-				console.log('GET received instead of a POST')
+				console.log("GET received instead of a POST");
 				res.status(400).json({message: 'This REST webhook is expecting an HTTP POST'});
 			})
 			.post(function (req, res) {
-				console.log('REST webhook invoked');
+				console.log("REST webhook invoked");
 
-				// retreive message contents from spark
-				if (!req.body || !req.body.data) {
-					console.log('Unexpected payload, check webhook configuration')
-					res.status(400).json({message: 'Wrong payload, a data payload is expected for REST webhooks',
+				// analyse incoming payload from spark
+				if (!req.body || !req.body.data || !req.body.resource || !req.body.event) {
+					console.log("Unexpected payload: no data, resource or event in body, aborting...");
+					res.status(400).json({message: 'Wrong payload, a data+resource+event payload is expected for REST webhooks',
 										  details: 'either the bot is misconfigured or Cisco Spark is running a new API version'});
 					return;
 				}
+			
+				// take action depending on event and ressource triggered
+				// see https://developer.ciscospark.com/webhooks-explained.html
+				var eventData = req.body.data;
+				switch (req.body.resource) {
+					case "messages":
+						switch (req.body.event) {
+							case "created": 
+								triggerMessageCreatedEvent(req, res, eventData);
+								break;
 
-				var newMessageEvent = req.body.data;
-				var options = {
-					'method': 'GET',
-					'hostname': 'api.ciscospark.com',
-					'path': '/v1/messages/' + newMessageEvent.id,
-					'headers': {'authorization': 'Bearer ' + config.token}
-				};
-				console.log('Asking for decrypted message');
-				var req = https.request(options, function (response) {
-					console.log('Received decrypted message, decoding');
-					var chunks = [];
-					response.on('data', function (chunk) {
-						chunks.push(chunk);
-					});
-					response.on("end", function () {
-						var message = JSON.parse(Buffer.concat(chunks));
+							case "deleted":
+							default:
+								console.log("This webhook does not support this resource/event type: messages/deleted");
+								break; 
+						}
+						break;
 
-						// WEBHOOK processing
-						console.log("Processing message: " + JSON.stringify(message));
-						execute(message);
-					});
-				});
-				req.end();
-
-				// event processed, let's respond to spark
-				res.status(200).json({'message': 'message processed by webhook'});
+					default:
+						console.log("This webhook does not support this resource/event type: " + req.body.resource + "/" + req.body.event);
+						res.status(500).json({message: 'This webhook does not support this resource/event type: ' + req.body.resource + '/' + req.body.event });
+						break;
+				}
 			});
 	}
 
@@ -105,17 +153,17 @@ function Webhook(config) {
 	if (config.integrationURI) { 
 		app.route(config.integrationURI)
 			.get(function (req, res) {
-				console.log('GET received instead of a POST');
+				console.log("GET received instead of a POST");
 				res.status(400).json({message: 'This outgoing integration is expecting an HTTP POST'});
 			})
 			.post(function (req, res) {
-				console.log('Outgoing integration invoked ');
+				console.log("Outgoing integration invoked ");
 
 				var message = req.body;
 				res.status(200).json({'message': 'message processed by integration'});
 
 				// INTEGRATION processing
-				console.log('Processing message: ' + JSON.stringify(message));
+				console.log('Invoking new message handler: ' + JSON.stringify(message));
 				execute(message);
 			});
 	}

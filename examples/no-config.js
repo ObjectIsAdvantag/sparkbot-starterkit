@@ -1,19 +1,9 @@
-/*
- * Simple bot that echoes new Cisco Spark messages to the console
- *
- * Illustrates an Outgoing integration
- *
+/* Most simplistic bot that echoes new Cisco Spark messages to the console
+ * Exposed as a Cisco Spark Outgoing integration, listening on port 8080 
  */
-var SparkBot = require("../sparkbot-starterkit");
+var SparkBot = require("sparkbot-starterkit");
 
-// No config => will start as an integration
-var bot = new SparkBot();
-
-// This function will be called every time a new message is posted into Spark
-bot.register(function(message) {
-  //
-  // ADD YOUR CUSTOM CODE HERE
-  //
+var bot = new SparkBot().register(function(message) {
   console.log("New message from " + message.personEmail + ": " + message.text)
 });
 

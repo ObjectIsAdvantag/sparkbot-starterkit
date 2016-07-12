@@ -4,7 +4,7 @@
  * Illustrates an Outgoing integration
  *
  */
-var SparkBot = require("../sparkbot-starterkit");
+var SparkBot = require("sparkbot-starterkit");
 
 var config = {
   integrationURI: "/integration"
