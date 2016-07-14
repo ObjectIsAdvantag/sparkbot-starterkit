@@ -18,6 +18,27 @@ Looking for a more advanced Spark Bot Engine ?
 - check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
+# Quick start
+
+Create a Cisco Spark "Outgoing Webhook" integration pointing to https://myawesomebot.localtunnel.me/integration
+
+and run the following commands on your local machine.
+
+``` bash
+# In a bash shell
+> npm install sparkbot-starterkit
+> cd sparkbot-starterkit
+> node tests/no-config.js
+no configuration => starting up as an incoming integration...
+Cisco Spark bot started on port: 8080
+
+# In a second bash shell
+> npm install -g localtunnel
+> lt -s myawesomebot -p 8080
+your url is: http://myawesomebot.localtunnel.me
+```
+
+
 # Start an incoming integration Bot
 
 Create the myfirstbot.js file below or pick an example from directory.
