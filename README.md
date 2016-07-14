@@ -3,25 +3,20 @@
 A minimal NodeJS Starter Kit to create your own [Spark](https://ciscospark.com/) bot, with few dependencies and goal to keep them at a minimum (Express that's it). 
 Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
 
-Note that the StarterKit implements both Cisco Spark webhooks mecanisms: REST webhook and incoming integrations (see below for details). 
+**Note that the StarterKit implements both Cisco Spark webhooks mecanisms:** 
+REST webhook and incoming integrations (see below for details). 
 Moreover, the StarterKit allows to implement both simultaneously for ultimate flexbility.
-
-Quick setup :
-- run examples/no-config.js locally, and expose it with localtunnel or ngrok (see below for details),
-- add an incoming integration to a Spark room pointing to your bot public address
 
 New to Cisco Spark ?
 - Spark is Cisco's Cloud Collaboration Services, which unifies team collaboration for the enterprise,
 - start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat service, with end to end securiy and integrated video).
 
-Looking for a more advanced Spark Bot Engine ?
-- check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
+Looking for a more advanced Spark Bot Engine ? check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
 
 
 # Quick start
 
 Create a Cisco Spark "Outgoing Webhook" integration pointing to https://myawesomebot.localtunnel.me/integration
-
 and run the following commands on your local machine.
 
 ``` bash
