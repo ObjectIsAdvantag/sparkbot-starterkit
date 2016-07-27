@@ -3,8 +3,8 @@
  */
 var SparkBot = require("../sparkbot-starterkit");
 
-var bot = new SparkBot().register(function(message) {
-  console.log("New message from " + message.personEmail + ": " + message.text)
+var bot = new SparkBot().register(function(message, text) {
+  console.log("New message from " + message.personEmail + ": " + text)
 });
 
 
