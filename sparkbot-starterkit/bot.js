@@ -190,10 +190,51 @@ function Webhook(config) {
 								break;
 
 							case "deleted":
+								triggerMessageDeletedEvent(res, data);
+								break;
+
 							default:
-								console.log("this webhook does not support this resource/event type: messages/deleted");
-								res.status(500).json({message: 'This webhook does not support this resource/event type: messages/deleted'});
-								break; 
+								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
+								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
+							break;
+						}
+						break;
+
+					case "memberships":
+						switch (event) {
+							case "created": 
+								triggerMembershipCreatedEvent(res, data);
+								break;
+
+							case "updated": 
+								triggerMembershipUpdatedEvent(res, data);
+								break;
+
+							case "deleted": 
+								triggerMembershipDeletedEvent(res, data);
+								break;
+
+							default:
+								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
+								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
+							break; 
+						}
+						break;
+
+					case "rooms":
+						switch (event) {
+							case "created": 
+								triggerRoomCreatedEvent(res, data);
+								break;
+
+							case "updated":
+								triggerRoomUpdatedEvent(res, data);
+								break;
+
+							default:
+								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
+								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
+								break;
 						}
 						break;
 
