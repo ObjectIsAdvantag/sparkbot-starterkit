@@ -37,9 +37,9 @@ function Webhook(config) {
 
 	self.started = Date.now();
 
-	function execute(message, text) {
-		if (self.handler) {
-			self.handler(message, text);
+	function processMessagesCreatedEvent(message, text) {
+		if (self.messagesCreatedHandler) {
+			self.messagesCreatedHandler(message, text);
 		}
 		else {
 			console.log("no handler registered for event Messages/Created");
@@ -108,10 +108,10 @@ function Webhook(config) {
 				if (self.config.homogenize && (message.roomType == "group") && (self.accountType == "BOT")) {
 					console.log("trying to homogenize message");
 					var homogenized = trimBotName(message.text, self.account.displayName);
-					execute(message, homogenized);
+					processMessagesCreatedEvent(message, homogenized);
 				}
 				else {
-					execute(message, message.text);
+					processMessagesCreatedEvent(message, message.text);
 				}
 			});
 
@@ -230,7 +230,7 @@ function Webhook(config) {
 
 				// INTEGRATION processing
 				console.log('invoking message handler: ' + JSON.stringify(message));
-				execute(message, message.text);
+				processMessagesCreatedEvent(message, message.text);
 			});
 	}
 
@@ -272,8 +272,14 @@ function Webhook(config) {
 //   }
 //
 // Check https://developer.ciscospark.com/endpoint-messages-messageId-get.html for more information
+Webhook.prototype.registerMessagesCreated = function(registered) {
+	this.messagesCreatedHandler = function(message, text) {
+		registered(message, text);
+	};
+}
+// For backward compability purpose, this is the default register function
 Webhook.prototype.register = function(registered) {
-	this.handler = function(message, text) {
+	this.messagesCreatedHandler = function(message, text) {
 		registered(message, text);
 	};
 }
@@ -400,13 +406,13 @@ function checkAccountType(token, cb) {
 }
 
 // Remove leading bot name (or fraction) from text 
+// If the bot name appears elsewhere in the text, it is not removed
 function trimBotName(text, name) {
-	// [TODO] quick implem here
 	var splitted = name.split(' ');
 	var nickname = splitted[0];
 	if (text.startsWith(nickname)) {
-		console.log("text needs to be trimmed")
-		return text.substring(nickname.length);
+		console.log("message starts with bot name, removing it")
+		return text.substring(nickname.length).trim();
 	}
 	return text;
 }
