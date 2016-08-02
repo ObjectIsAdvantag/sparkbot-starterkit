@@ -35,18 +35,34 @@ app.use(bodyParser.json());
 function Webhook(config) {
 	self = this;
 
+	self.events = {};
+	self.supportedResources = [ "memberships", "messages", "rooms"];
+	self.supportedEvents = [ "created", "deleted", "updated"];
+
 	self.started = Date.now();
 
-	function processMessagesCreatedEvent(message, text) {
-		if (self.messagesCreatedHandler) {
-			self.messagesCreatedHandler(message, text);
+	// This is the common function to process all wekbhook events
+	// except messages/created which has a specific signature 
+	function runHandler(res, resource, event, data) {
+		var entry = resource+"/"+event;
+		var handler = self.events[entry];
+		if (!handler) {
+			console.log("no handler registered for resource/event: " + entry);
+			res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
+			return;
 		}
-		else {
-			console.log("no handler registered for event Messages/Created");
+
+		if (entry != "messages/created") {
+			res.status(200);
+			handler.process(data);
+			return;
 		}
+
+		runMessagesCreatedHandler(res, data);
 	}
 
-	function triggerMessageCreatedEvent(originalResponse, triggerData) {
+	// 
+	function runMessagesCreatedHandler(handler, originalResponse, triggerData) {
 		// Check the event is well formed
 		if (!triggerData.id) {
 			console.log("no message id, aborting...");
@@ -105,13 +121,15 @@ function Webhook(config) {
 
 				// if we're a bot account and the message is emitted in a "group" room, the message contains the bot display name (or a fraction of it)
 				// removing the bot name (or fraction) can help provide homogeneous behavior in direct & group rooms, as well as Outgoing integrations
+				var enrichedData = data;
 				if (self.config.homogenize && (message.roomType == "group") && (self.accountType == "BOT")) {
 					console.log("trying to homogenize message");
 					var homogenized = trimBotName(message.text, self.account.displayName);
-					processMessagesCreatedEvent(message, homogenized);
+					enrichedData.trimmedText = homogenized;
+					handler.process(enrichedData);
 				}
 				else {
-					processMessagesCreatedEvent(message, message.text);
+					handler.process(enrichedData);
 				}
 			});
 
@@ -182,67 +200,7 @@ function Webhook(config) {
 
 				// take action depending on event and ressource triggered
 				// see https://developer.ciscospark.com/webhooks-explained.html
-				switch (resource) {
-					case "messages":
-						switch (event) {
-							case "created": 
-								triggerMessageCreatedEvent(res, data);
-								break;
-
-							case "deleted":
-								triggerMessageDeletedEvent(res, data);
-								break;
-
-							default:
-								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
-								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
-							break;
-						}
-						break;
-
-					case "memberships":
-						switch (event) {
-							case "created": 
-								triggerMembershipCreatedEvent(res, data);
-								break;
-
-							case "updated": 
-								triggerMembershipUpdatedEvent(res, data);
-								break;
-
-							case "deleted": 
-								triggerMembershipDeletedEvent(res, data);
-								break;
-
-							default:
-								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
-								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
-							break; 
-						}
-						break;
-
-					case "rooms":
-						switch (event) {
-							case "created": 
-								triggerRoomCreatedEvent(res, data);
-								break;
-
-							case "updated":
-								triggerRoomUpdatedEvent(res, data);
-								break;
-
-							default:
-								console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
-								res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
-								break;
-						}
-						break;
-
-					default:
-						console.log("this webhook does not support this resource/event type: " + resource + "/" + event);
-						res.status(500).json({message: 'This webhook does not support this resource/event type: ' + resource + '/' + event });
-						break;
-				}
+				runHandler(res, resource, event, data);
 			});
 	}
 
@@ -267,11 +225,9 @@ function Webhook(config) {
 					return;
 				}
 
-				res.status(200).json({'message': 'message processed by integration'});
-
 				// INTEGRATION processing
 				console.log('invoking message handler: ' + JSON.stringify(message));
-				processMessagesCreatedEvent(message, message.text);
+				runHandler(res, 'messages', 'created', message)
 			});
 	}
 
@@ -283,7 +239,7 @@ function Webhook(config) {
 			'since': new Date(self.started).toISOString(),
 			'integrationURI': config.integrationURI || null,
 			'webhookURI': config.webhookURI || null,
-			'processable': '[messages/created]',		// [TODO] should dynamicaly explore the registered handlers
+			'handlers': Object.keys(self.events),		// [TODO] should dynamicaly explore the registered handlers
 			'accountType' : self.accountType			// undefined, HUMAN or BOT
 		});
 	});
@@ -293,6 +249,39 @@ function Webhook(config) {
 	app.listen(port, function () {
 		console.log("Cisco Spark bot started on port: " + port);
 	});
+}
+
+// Register the handler which will process the specified resource + event 
+// The handler should have a function(data) signature
+Webhook.prototype.register = function(handler, resource, event) {
+	// for backward compatibility as the Spark API only supported messages/created events when launched
+	if (!resource) resource = "messages";
+	if (!event) event = "created";
+	
+	// Robustify
+	if (!handler) {
+		console.log("no handler specified, cannot register handler function");
+		return;
+	}
+	if (this.supportedResources.indexOf(resource) == -1) {
+		console.log("resource not supported: " + resource + ", handler has not been registered");
+		return;
+	} 
+	if (this.supportedEvents.indexOf(event) == -1) {
+		console.log("event not supported: " + event + ", handler has not been registered");
+		return;
+	}
+	if ((event == "updated") && (resource != "memberships")) {
+		console.log("event updated is only supported for resource: memverships, handler has not been registered");
+		return;
+	}
+
+	// Add handler
+	var entry = resource+"/"+event;
+	console.log("registering handler for resource/event: " + entry);
+	self.events[entry] = function(data) {
+		handler(data);
+	};
 }
 
 
@@ -313,17 +302,18 @@ function Webhook(config) {
 //   }
 //
 // Check https://developer.ciscospark.com/endpoint-messages-messageId-get.html for more information
-Webhook.prototype.registerMessagesCreated = function(registered) {
-	this.messagesCreatedHandler = function(message, text) {
-		registered(message, text);
-	};
-}
-// For backward compability purpose, this is the default register function
-Webhook.prototype.register = function(registered) {
-	this.messagesCreatedHandler = function(message, text) {
-		registered(message, text);
-	};
-}
+
+// Webhook.prototype.registerMessagesCreated = function(registered) {
+// 	this.messagesCreatedHandler = function(message, text) {
+// 		registered(message, text);
+// 	};
+// }
+// // For backward compability purpose, this is the default register function
+// Webhook.prototype.register = function(registered) {
+// 	this.messagesCreatedHandler = function(message, text) {
+// 		registered(message, text);
+// 	};
+// }
 
 // Returns a trigger if the payload complies with the documentation, undefined otherwise
 // see https://developer.ciscospark.com/webhooks-explained.html 
