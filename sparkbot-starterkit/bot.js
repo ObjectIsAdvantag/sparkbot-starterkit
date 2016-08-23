@@ -28,7 +28,7 @@ app.use(bodyParser.json());
  *  	integrationURI: "/integration"   		    // optional, implements an Outgoing integration behavior if present
  *  	healthURI : 	"/ping",  					// optional, health URI, defaults to "/ping"
  * 		token:  		"CISCO SPARK API TOKEN",    // optional, spark REST api token, defaults to SPARK_TOKEN env variable
- *      homogenize:     true                        // optional, defaults to true, goal gere is to try to homogenize the message in case of new Messages/Created event raised by REST webhook and processed via a bot account  
+ *      trimBotMention: true                        // optional, defaults to true, tries to remove the bot mention in case of new Messages/Created event raised by a REST webhook in a Group room, and processed via a bot account  
  *  }
  * 
  */
@@ -41,8 +41,7 @@ function Webhook(config) {
 
 	self.started = Date.now();
 
-	// This is the common function to process all wekbhook events
-	// except messages/created which has a specific signature 
+	// This is the common function to process all wekbhook events 
 	function runHandler(res, resource, event, data) {
 		var entry = resource+"/"+event;
 		var handler = self.events[entry];
@@ -54,14 +53,14 @@ function Webhook(config) {
 
 		if (entry != "messages/created") {
 			res.status(200);
-			handler.process(data);
+			handler(data);
 			return;
 		}
 
-		runMessagesCreatedHandler(res, data);
+		runMessagesCreatedHandler(handler, res, data);
 	}
 
-	// 
+	// Fetches message contents (decryption) before processing the event 
 	function runMessagesCreatedHandler(handler, originalResponse, triggerData) {
 		// Check the event is well formed
 		if (!triggerData.id) {
@@ -121,16 +120,14 @@ function Webhook(config) {
 
 				// if we're a bot account and the message is emitted in a "group" room, the message contains the bot display name (or a fraction of it)
 				// removing the bot name (or fraction) can help provide homogeneous behavior in direct & group rooms, as well as Outgoing integrations
-				var enrichedData = data;
-				if (self.config.homogenize && (message.roomType == "group") && (self.accountType == "BOT")) {
+				if (self.config.trimBotMention && (message.roomType == "group") && (self.accountType == "BOT")) {
 					console.log("trying to homogenize message");
-					var homogenized = trimBotName(message.text, self.account.displayName);
-					enrichedData.trimmedText = homogenized;
-					handler.process(enrichedData);
+					var trimmed = trimBotName(message.text, self.account.displayName);
+					message.originalText = message.text;
+					message.text = trimmed;
 				}
-				else {
-					handler.process(enrichedData);
-				}
+
+				handler(message);
 			});
 
 		});
@@ -165,7 +162,7 @@ function Webhook(config) {
 		});
 	}
 
-	self.config.homogenize = config.homogenize || true;
+	self.config.trimBotMention = config.trimBotMention || true;
 
 	// REST webhook handler
 	if (config.webhookURI) {
@@ -214,20 +211,29 @@ function Webhook(config) {
 			.post(function (req, res) {
 				console.log("outgoing integration invoked ");
 
-				// Robustify: do not proceed if the paylod does not comply with the expected message structure
+				// Robustify: do not proceed if the payload does not comply with the expected message structure
 				var message = validateMessage(req.body)
 				if (!message) {
 					console.log("unexpected message format, aborting: " + message);
 					// let's consider this as a satisfying situation, it is simply a message structure we do not support
 					// we do not want the webhook to resend us the message again and again 
 					// => 200 OK: got it and we do not process further  
-					originalResponse.status(200).json({'message': 'message format is not supported'});
+					res.status(200).json({'message': 'message format is not supported'});
 					return;
 				}
 
+				// Message is ready to be processed, let's respond to Spark without waiting whatever the processing outcome will be
+				res.status(200).json({'message': 'message is being processed by webhook'});
+				
 				// INTEGRATION processing
-				console.log('invoking message handler: ' + JSON.stringify(message));
-				runHandler(res, 'messages', 'created', message)
+				var handler = self.events["messages/created"];
+				if (!handler) {
+					console.log("no handler registered for resource/event: " + entry);
+					return;
+				}
+
+				console.log('invoking message handler with message: ' + JSON.stringify(message));
+				handler(message);
 			});
 	}
 
@@ -359,8 +365,10 @@ function valideTrigger(payload) {
 function validateMessage(payload) {
     if (!payload 	|| !payload.id 
                     || !payload.personId 
-                    || !payload.personEmail
-					|| !payload.roomType 
+                    || !payload.personEmail 
+					// As of July 2016, Message Details has been enriched with the Room type,
+					// but the Outgoing integration does not receive the Room type yet.
+					//|| !!payload.roomType					
                     || !payload.roomId  
                     || !payload.created) {
         console.log("message structure is not compliant");
