@@ -88,6 +88,11 @@ function Webhook(config) {
 				if (response.statusCode != 200) {
 					console.log("status code: " + response.statusCode + " when retreiving message with id: " + messageId);
 					originalResponse.status(500).json({'message': 'status code: ' + response.statusCode + ' when retreiving message with id:' + messageId});
+					
+					// August 2016: 404 happens when the webhook has been created with a different token from the bot
+					if (response.statusCode == 404) {
+						console.log("WARNING: Did you create the Webhook with the same token you configured this bot with ? Not sure !");
+					}
 					return;
 				}
 					
