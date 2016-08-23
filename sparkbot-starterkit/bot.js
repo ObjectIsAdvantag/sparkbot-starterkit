@@ -271,7 +271,7 @@ Webhook.prototype.register = function(handler, resource, event) {
 	
 	// Robustify
 	if (!handler) {
-		console.log("no handler specified, cannot register handler function");
+		console.log("no handler specified, cannot register function");
 		return;
 	}
 	if (this.supportedResources.indexOf(resource) == -1) {
@@ -282,8 +282,12 @@ Webhook.prototype.register = function(handler, resource, event) {
 		console.log("event not supported: " + event + ", handler has not been registered");
 		return;
 	}
-	if ((event == "updated") && (resource != "memberships")) {
-		console.log("event updated is only supported for resource: memverships, handler has not been registered");
+	if ((event == "updated") && (resource == "messages")) {
+		console.log("event 'updated' is not supported for 'messages', handler has not been registered");
+		return;
+	}
+	if ((event == "deleted") && (resource == "rooms")) {
+		console.log("event 'deleted' is not supported for 'rooms', handler has not been registered");
 		return;
 	}
 

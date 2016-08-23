@@ -41,6 +41,16 @@ bot.register(function(membership) {
 
 
 bot.register(function(membership) {
+  console.log("Updated membership for member: " + membership.personEmail + ", in room: " + membership.roomId);
+
+  //
+  // ADD YOUR CUSTOM CODE HERE
+  //
+  
+}, 'memberships', 'updated');
+
+
+bot.register(function(membership) {
   console.log("Deleted member: " + membership.personEmail + ", from room: " + membership.roomId);
 
   //
