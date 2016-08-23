@@ -1,11 +1,18 @@
+# IDE
+.idea/
+.code/
+
+# Tests, documentation
+tests/
+docs/
 
 # node artefacts 
 # automatically removed by npm
 node_modules/
 npm-debug.log
 
-# IDE
-.idea/
-.code/
+
+
+
 
 
