@@ -10,7 +10,7 @@ var SparkBot = require("../sparkbot-starterkit");
 var config = {
   token: process.env.SPARK_TOKEN, 
   webhookURI: "/webhook",
-  integration: "/integration"
+  integrationURI: "/integration"
 };
 
 // Starts your Webhook
