@@ -16,10 +16,15 @@ var config = {
 var bot = new SparkBot(config);
 
 // This function will be called every time a new message is posted into Spark
-bot.register(function(message, text) {
+bot.register(function(message) {
   //
   // ADD YOUR CUSTOM CODE HERE
   //
-  console.log("New message from " + message.personEmail + ": " + text)
+  console.log("New message from " + message.personEmail + ": " + message.text);
+
+  // In case the bot is associated to a Bot account, and was mentionned in a group room
+  if (message.originalText) {
+      console.log("   - original text: " + message.originalText);
+  }
 });
 

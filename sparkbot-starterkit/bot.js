@@ -87,7 +87,7 @@ function Webhook(config) {
 			response.on("end", function () {
 				if (response.statusCode != 200) {
 					console.log("status code: " + response.statusCode + " when retreiving message with id: " + messageId);
-					originalResponse.status(500).json({'message': 'status code: ' + response.statusCode + ' when retreiving the text of the message with id:' + messageId});
+					originalResponse.status(500).json({'message': 'status code: ' + response.statusCode + ' when retreiving message with id:' + messageId});
 					return;
 				}
 					
