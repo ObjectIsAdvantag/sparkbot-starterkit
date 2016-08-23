@@ -57,18 +57,18 @@ function Webhook(config) {
 			return;
 		}
 
-		runMessagesCreatedHandler(handler, res, data);
+		processMessagesCreatedEventWithHandler(handler, res, event, data);
 	}
 
 	// Fetches message contents (decryption) before processing the event 
-	function runMessagesCreatedHandler(handler, originalResponse, triggerData) {
+	function processMessagesCreatedEventWithHandler(handler, originalResponse, event, data) {
 		// Check the event is well formed
-		if (!triggerData.id) {
+		if (!data.id) {
 			console.log("no message id, aborting...");
 			originalResponse.status(500).json({'message': 'could not retreive the message contents, no message id there !'});
 			return;
 		}
-		var messageId = triggerData.id;
+		var messageId = data.id;
 
 		// Retreive text for message id
 		console.log("requesting message contents");
@@ -91,7 +91,7 @@ function Webhook(config) {
 					
 					// August 2016: 404 happens when the webhook has been created with a different token from the bot
 					if (response.statusCode == 404) {
-						console.log("WARNING: Did you create the Webhook with the same token you configured this bot with ? Not sure !");
+						console.log("WARNING: Did you create the Webhook: " + event.id + " with the same token you configured this bot with ? Not sure !");
 					}
 					return;
 				}
