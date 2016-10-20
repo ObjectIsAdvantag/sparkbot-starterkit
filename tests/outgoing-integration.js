@@ -3,7 +3,7 @@
  *    - as an Outgoing integration, associated to a Spark room
  * 
  */
-var SparkBot = require("../sparkbot-starterkit");
+var SparkBot = require("../starterkit");
 
 var config = {
   integrationURI: "/integration",

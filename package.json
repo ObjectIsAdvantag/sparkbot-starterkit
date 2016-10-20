@@ -1,27 +1,28 @@
 {
-  "name": "sparkbot-starterkit",
-  "version": "v0.8.0",
-  "description": "Bootstrap a Cisco Spark JS bot using minimal requirements (NodeJS, Express)",
+  "name": "node-outgoing-webhooks",
+  "version": "v1.8.0",
+  "description": "build Spark Bots out of the Outgoing WebHook feature of the Cisco Spark Web Client",
   "main": "index.js",
   "scripts": {
     "test": "test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ObjectIsAdvantag/sparkbot-starterkit.git"
+    "url": "git+https://github.com/ObjectIsAdvantag/node-outgoing-webhooks.git"
   },
   "keywords": [
     "CiscoSpark",
     "Bot",
+    "Webhook",
     "NodeJS",
     "Express"
   ],
-  "author": "Stève Sfartz",
+  "author": "Stève Sfartz (Cisco DevNet)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ObjectIsAdvantag/sparkbot-starterkit/issues"
+    "url": "https://github.com/ObjectIsAdvantag/node-outgoing-webhooks/issues"
   },
-  "homepage": "https://github.com/ObjectIsAdvantag/sparkbot-starterkit#readme",
+  "homepage": "https://github.com/ObjectIsAdvantag/node-outgoing-webhooks#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4"

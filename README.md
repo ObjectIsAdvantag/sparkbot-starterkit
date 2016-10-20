@@ -1,148 +1,57 @@
-# Yet Another Unofficial StarterKit to create Cisco Spark bots in NodeJS
+# node-outgoing-webhooks
 
-A minimal NodeJS Starter Kit to create your own [Spark](https://ciscospark.com/) bot, with few dependencies and goal to keep them at a minimum (Express that's it). 
-Started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap dev teams in minutes.
+A starter kit to build Spark Bots out of the Outgoing WebHook feature of the Cisco Spark Web Client.  
 
-**Note that the StarterKit implements both Cisco Spark webhooks mecanisms:** 
-REST webhook and incoming integrations (see below for details). 
-Moreover, the StarterKit allows to implement both simultaneously for ultimate flexbility.
+**Note that this kit leverages Outgoing Webhooks exposed by the Spark Web Client, which is not the traditionnal way to build a Spark bots.
+Before spending too much thime here, make sure you have checked these nodejs Bot libraries that leverages the traditionnal Spark API Webhooks: [flint](https://github.com/nmarus/flint), [node-sparkbot](https://github.com/CiscoDevNet/node-sparkbot)**
 
 New to Cisco Spark ?
 - Spark is Cisco's Cloud Collaboration Services, which unifies team collaboration for the enterprise,
 - start with the [Web Client](https://web.ciscospark.com/) (signup, enjoy the free chat service, with end to end securiy and integrated video).
 
-Looking for a more advanced Spark Bot Engine ? check Nick Marus's [flint](https://github.com/nmarus/flint) and [quickstart](https://github.com/nmarus/flint/blob/master/quickstart/README.md).
+
+## A bit of history 
+
+This effort was started after [@CiscoDevNet SmartCity Paris](https://twitter.com/hashtag/devnethackathon) and @TADHack London hackathons, to bootstrap NodeJS Spark developers in minutes.
+
+Therefore, the library is limited to very few dependencies and goal to keep them at a minimum (Express that's it).
+
+Until July 2016, the library made it possible to support both traditional Webhooks and Outgoing integrations with the same programming interface.
+
+With the introduction of the enhanced Spark Webhooks, this flexibility turned not to be sustainable. 
 
 
-# Quick start
+# Launch your bot in 60 seconds 
 
-Create a Cisco Spark "Outgoing Webhook" integration pointing to https://myawesomebot.localtunnel.me/integration
-and run the following commands on your local machine.
+Read through the Quickstart hereafter, or jump to the [detailled guide](docs/BasicIntegrationSample.md)
 
 ``` bash
-# In a bash shell
-> npm install sparkbot-starterkit
-> cd sparkbot-starterkit
+# In a 1st shell, install and launch your bot
+# if you are running OSX 
+#> sudo npm install express sparkbot-starterkit
+# On windows
+> npm install node-outgoing-webhooks
+> cd node-outgoing-webhooks
 > node tests/no-config.js
 no configuration => starting up as an incoming integration...
 Cisco Spark bot started on port: 8080
 
-# In a second bash shell
+# In a 2nd bash shell, check your bot is healthy by hitting your sparkbot health resource:
+# open in a web browser http://localhost:8080/ping/ 
+# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
+# OSX devs: if localhost doesn't work for you, try 127.0.0.1
+> curl http://localhost:8080/ping/
+{"message":"Congrats, your bot is up and running","since":"2016-07-06T23:20:50.296Z","integrationURI":"/integration","webhookURI":null}
+
+# Then expose your bot to the internet
 > npm install -g localtunnel
 > lt -s myawesomebot -p 8080
 your url is: http://myawesomebot.localtunnel.me
-```
 
-
-# Start an incoming integration Bot
-
-Create the myfirstbot.js file below or pick an example from directory.
-
-``` nodejs
-var SparkBot = require("sparkbot-starterkit");
-
-// Starts a Webhook as an incoming integration, listening at :8080/integration
-var bot = new SparkBot();
-
-// This function will be called every time a new message is posted into Spark 
-bot.register(function(message) {
-  //
-  // ADD YOUR CUSTOM CODE HERE
-  //
-  console.log("New message from " + message.personEmail + ": " + message.text)
-});
-```
-
-You're all set, let's run your sparkbot 
-
-``` bash
-# if you are running OSX 
-> sudo npm install express sparkbot-starterkit
-# if you are running Windows
-> npm install express sparkbot-starterkit
-
-# launch your spark bot, default to port 8080
-# note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
-> node myfirstbot.js
-No configuration => starting up as an incoming integration...
-Cisco Spark bot started on port: 8080
-
-# open a second console and check your bot is running by hitting your sparkbot health resource:
-# open in a web browser http://localhost:8080/ping/ 
+# In a 3nd bash shell, check everything is running ok by hitting your sparkbot health resource
+# open in a web browser https://myawesomebot.localtunnel.me/ping/ 
 # or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
-# OSX note: if localhost doesn't work for you, try 127.0.0.1
-> curl http://localhost:8080/ping/
-
-{"message":"Congrats, your bot is up and running","since":"2016-07-06T23:20:50.296Z","integrationURI":"/integration","webhookURI":null}
-
-```
-
-
-# Start a REST webhook Bot
-
-Create the myfirstbot.js file below or pick an example from directory.
-
-``` nodejs
-var SparkBot = require("sparkbot-starterkit");
-
-var config = {
-  /// Cisco Spark API token, note that it is mandatory for webhooks to decode new messages
-  token: process.env.SPARK_TOKEN,
-  webhookURI: "/webhook"
-};
-
-// Starts a Webhook as an incoming integration, listening at :8080/integration
-var bot = new SparkBot(config);
-
-// This function will be called every time a new message is posted into Spark 
-bot.register(function(message) {
-  //
-  // ADD YOUR CUSTOM CODE HERE
-  //
-  console.log("New message from " + message.personEmail + ": " + message.text)
-});
-```
-
-You're all set, let's run your sparkbot 
-
-``` bash
-# if you are running OSX 
-> sudo npm install express sparkbot-starterkit
-# if you are running Windows
-> npm install express sparkbot-starterkit
-
-# launch your spark bot, default to port 8080
-# note: your cisco spark token can be retreived by clicking on your account picture (upper right corner of the [developer documentation](https://developer.ciscospark.com/getting-started.htm))
-> SPARK_TOKEN=XXXXXXXXXXXXX  node myfirstbot.js
-Cisco Spark bot started on port: 8080
-
-# open a second console and check your bot is running by hitting your sparkbot health resource:
-# open in a web browser http://localhost:8080/ping/ 
-# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
-# OSX note: if localhost doesn't work for you, try 127.0.0.1
-> curl http://localhost:8080/ping/
-{"message":"Congrats, your bot is up and running","since":"2016-07-06T23:33:15.535Z","integrationURI":null,"webhookURI":"/webhook"}
-
-```
-
-
-# How to expose your bot to the Web
-
-``` bash
-# if you're running your bot on a private network, install localtunnel
-> npm install -g localtunnel
-
-# launch a tunnel and expose your http://localhost:8080 endpoint
-# note1: maje sure top choose a name that will not collide with another bot developer !
-# note2: once you'll have your bot successfully setup, you'll may want to run localtunnel forever:
-#     ex: while true; do lt -s sparkbot -p 8080; done
-> lt -s sparkbot -p 8080
-your url is: https://sparkbot.localtunnel.me
-
-# check everything is running ok by hitting your sparkbot health resource
-# open in a web browser https://sparkbot.localtunnel.me/ping/ 
-# or use a back command such as curl, [httpie](https://github.com/jkbrzt/httpie), or [bat](https://github.com/astaxie/bat)
-> curl -v -X GET https://sparkbot.localtunnel.me/ping
+> curl -v -X GET https://myawesomebot.localtunnel.me/ping
 * ...
 * NPN, negotiated HTTP1.1
 * ...
@@ -151,42 +60,20 @@ your url is: https://sparkbot.localtunnel.me
 HTTP/1.1 200 OK
 {
     "message":"Congrats, your bot is up and running",
-    "isWebhook":true,
-    "isIntegration":false,
-    "URI":"http://localhost:8080/webhook"
+    "isWebhook":false,
+    "isIntegration":true,
+    "URI":"http://localhost:8080/integration"
 }
 ```
 
-# How to attach your bot to a Spark room
+# Then start sending Spark messages & commands to your bot
 
-CiscoSpark defines 2 types of webhooks:
-
-- HTTP webhooks : receive all events fired by a Spark Room, 'NewMessage' is the only event fired as of April 2016 (more coming),
-- outgoing integrations : receive new message events fired by a Spark Room.
-
-The bot proposed by the StarterKit proposes 2 endpoints /webhook and /integration so that you can pick one or another way to attach the bot to a Spark Room.
-
-
-## to attach a REST Webhook to a Spark Room:
-
-Attaching a REST webhook to a Spark room is explained in the [Cisco Spark developer documentation](https://developer.ciscospark.com/webhooks-explained.html)
-
-Quick setup:
-- [lists your rooms](https://developer.ciscospark.com/endpoint-rooms-get.html), choose one, pick its room id,
-- [add a webhook](https://developer.ciscospark.com/endpoint-webhooks-post.html) with a filter for the roomId above, and with a targetUrl pointing to your /webhook endpoint, ex: https://sparkbot.localtunnel.me/webhook.
-
-Take [DevNet Learning lab](https://learninglabs.cisco.com/lab/collab-sparkwebhook/step/1) for a step by step tutorial.
-
-
-## to attach an Outgoing integration to a Spark Room:
-
-Outgoing integrations can be created directly from the Cisco Spark web client.
-Note: you may also use the REST API /webhooks/outgoing resource.
-
-Quick setup:
+First step is to create the Outgoing integration: 
 - launch the [Web client](https://web.ciscospark.com),
 - pick a Room, look for the integrations pane on the right,
-- create a new integration of type "outgoing webhook" with a targetUrl pointing to your bot /integration URI, ex: https://sparkbot.localtunnel.me/integration.
+- create a new integration of type "Outgoing Webhook" with a targetUrl pointing to your bot /integration URI, ex: https://myawesomebot.localtunnel.me/integration.
+
+_Note that an alternative would be to call the REST API Resource "/webhooks/outgoing" which is not documented though._
 
 
 # Troubleshooting

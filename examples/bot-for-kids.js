@@ -7,24 +7,20 @@
  * INSTALLATION NOTES : the node-sparky is required, to install it run :
  *   > npm install node-sparky
  */
-var SparkBot = require("sparkbot-starterkit");
+var SparkBot = require("../starterkit");
+//var SparkBot = require("node-outgoing-webhooks");
 var Sparky = require("node-sparky");
 
 var config = {
-  integrationURI: "/newmessages",
-
-  // Required for the bot to push messages back to the Spark room
-  token: process.env.SPARK_TOKEN,
-
-  name: "Daisy",
+  command: "Daisy",
   peopleId: "Y2lzY29zcGFyazovL3VzL1BFT1BMRS8zNzYzZGNhMi1jZmQ1LTQ0ZTMtYWMwNy1iOTIzZTYxZDc2M2M"
 };
 
 // Starts your bot
-var bot = new SparkBot(config);
+var bot = new SparkBot();
 
 // Create a Spark client to send messages back to the Room
-var sparky = new Sparky({ token: config.token });
+var sparky = new Sparky({ token: process.env.SPARK_TOKEN });
 
 // This function will be called every time a new message is posted into Spark
 bot.register(function(message) {
@@ -38,7 +34,7 @@ bot.register(function(message) {
 
   // Check that the message is sent to the bot or contains the bot name
   var lower = message.text.toLowerCase();
-  if ((message.toPersonId != config.peopleId)&& (lower.indexOf(config.name.toLowerCase()) == -1)) {
+  if ((message.toPersonId != config.peopleId) && (lower.indexOf(config.command.toLowerCase()) == -1)) {
     console.log("bot not concerned => ignoring");
     return;
   }
@@ -82,30 +78,27 @@ bot.register(function(message) {
 });
 
 function sendText(roomId, message) {
-  sparky.message.send.room(roomId, {
+  sparky.messageSendRoom(roomId, {
     text: message
-  }, function (err, results) {
-    if (err) {
+  }).then(function(message) {
+      console.log("message sent back");
+  })
+  .catch(function(err){
       console.log("could not send the text back to the room: " + err);
-    }
-    else {
-      console.log("sendText command successful");
-    }
   });
 }
 
 function sendImage(roomId, url) {
-  sparky.message.send.room(roomId, {
+  sparky.messageSendRoom(roomId, {
     file: url
-  }, function (err, results) {
-    if (err) {
+  }).then(function(message) {
+      console.log("image sent back");
+  })
+  .catch(function(err){
       console.log("could not send the image back to the room: " + err);
-    }
-    else {
-      console.log("sendImage command successful");
-    }
   });
 }
+
 
 function displayAide(roomId) {
   sendText(roomId, "Bonjour. Veux-tu que je vous raconte une histoire, que je vous écoute ou bien que souhaites-tu tenter un défi ?")
